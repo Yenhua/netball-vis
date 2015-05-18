@@ -5,11 +5,30 @@
 charset="utf-8"></script>
 
 </head>
-<body>
+<body onload="loadTable();">
 <!-- <svg width="640" height="360">
 <rect x="0" y="0" width="640" height="360" fill="green" />
 </svg> -->
-Application to test loading CSV tables.
+Application to test loading/parsing CSV tables.
 
-http://stackoverflow.com/questions/7431268/how-to-read-data-from-csv-file-using-javascript
 </body>
+
+<script src="jquery-csv.js"></script>
+
+<script>
+
+var tableData = [];
+
+function loadTable(){
+ 
+  d3.csv("data/2012-Table1.csv", function(data) {
+        tableData=data;
+        console.log("tableData[0][Score] = " + tableData[0]["Score"]);
+  });
+
+}
+
+</script>
+
+
+</html>
