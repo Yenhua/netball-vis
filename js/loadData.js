@@ -3,18 +3,18 @@
 var tableData = [];
 
 function loadTable(arg){
- 
+
   d3.csv("data/2012-Table1.csv", function(data) {
         tableData=data;
         console.log("tableData[0][Score] = " + tableData[0]["Score"]);
         calculateHomeAdvantageTeam();
-
+        populateTeams(); //This fills the arrays in the table script
         if(arg=="bar"){
         	drawBarChart();//this can be defined anywhere as long as the html page knows it exists
         }
 
   });
-  
+
 
 }
 
@@ -112,7 +112,7 @@ function calculateHomeAdvantageTeam(){
 function checkSameCountry(team1, team2){
 	var id1 = teamID[team1];
 	var id2 = teamID[team2];
-	
+
 	if(id1.indexOf("NZ")!=-1 && id2.indexOf("NZ")!=-1){
 		return true;
 	}
@@ -129,5 +129,5 @@ function calculateStadiumStats(){
 	//might be tidier to reparse the array/tableData
 	for(var i = 0;i<tableData.length;i++){
 
-	}	
+	}
 }
