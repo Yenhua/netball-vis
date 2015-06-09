@@ -56,37 +56,27 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    var testData = [
+    {State: "I45451",A:3330,B: 4499890},
+    {State:"I2",A:2027307,B:3277946},
+    {State:"I3", A:1208495, B:2141490},
+    {State:"I4",A:1140516, B:1938695},
+    {State:"I5", A:894368, B: 1558919},
+    {State:"I6",A:737462, B:1345341}];
+
 d3.csv("data.csv", function(error, data) {
+
+  data = testData;
   var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "State"; });
 
   data.forEach(function(d) {
     d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
-
-    //console.log(d);
-    //console.log(d.ages);//this is a array of name to values, one for each row from the csv
   });
 
-
-  // x0.domain(data.map(function(d) { 
-  //   console.log(d.State);
-  //   return d.State; }));
-
-   x0.domain(["I1","I2","I3","I4","I5","I6"]);
+  x0.domain(data.map(function(d) { return d.State; }));
   x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
   y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
 
-  var testData = [
-    {"State": "I1", "A":2704659, "B": 4499890},
-
-    {"State":"I3", "A":1208495, "B":2141490},
-    {"State":"I4","A":1140516, "B":1938695},
-    {"State":"I5", "A":894368, "B": 1558919},
-    {"State":I6":[737462,1345341]
-
-  ];
-
-  console.log(data);
-  console.log(testData);
   svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
@@ -106,9 +96,7 @@ d3.csv("data.csv", function(error, data) {
       .data(data)
     .enter().append("g")
       .attr("class", "g")
-      .attr("transform", function(d) { 
-        console.log(d.State);
-        return "translate(" + x0(d.State) + ",0)"; });
+      .attr("transform", function(d) { return "translate(" + x0(d.State) + ",0)"; });
 
   state.selectAll("rect")
       .data(function(d) { return d.ages; })
@@ -139,5 +127,6 @@ d3.csv("data.csv", function(error, data) {
       .text(function(d) { return d; });
 
 });
+
 
 </script>
