@@ -1,0 +1,8 @@
+'use strict';
+
+
+//Store the table rows - Team Name, Home Wins, Away Wins, Wins Against same Country, Wins against different country
+var teams = [
+
+
+];
