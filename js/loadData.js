@@ -2,12 +2,17 @@
 
 var tableData = [];
 
-function loadTable(){
+function loadTable(arg){
  
   d3.csv("data/2012-Table1.csv", function(data) {
         tableData=data;
         console.log("tableData[0][Score] = " + tableData[0]["Score"]);
         calculateHomeAdvantageTeam();
+
+        if(arg=="bar"){
+        	drawBarChart();//this can be defined anywhere as long as the html page knows it exists
+        }
+
   });
   
 
@@ -30,7 +35,6 @@ var teamWins = {//AUS teams
 				"Southern Steel":[0,0,0,0]}
 
 var teamID = {//AUS teams
-				//"name":[home wins,away wins,win against same country, win against different country]
 				"Adelaide Thunderbirds":"AUS1",
 				"Queensland Firebirds":"AUS2",
 				"New South Wales Swifts":"AUS3",
@@ -42,6 +46,23 @@ var teamID = {//AUS teams
 				"Central Pulse":"NZ3",
 				"Canterbury Tactix":"NZ4",
 				"Southern Steel":"NZ5"}
+
+var idVenue = {//each team has a associated home venue, we can access the strings here
+				//AUS teams
+				"AUS1":"Netball SA Stadium, Adelaide",
+				"AUS2":"Brisbane Convention and Exhibition Centre",
+				"AUS3":"State Sports Centre, Sydney",
+				"AUS4":"Hisense Arena, Melbourne",
+				"AUS5":"Challenge Stadium, Perth",
+				//NZ teams
+				"NZ1":"Trusts Stadium, Auckland",
+				"NZ2":"Claudelands Arena, Hamilton",
+				"NZ3":"Te Rauparaha Arena, Porirua",
+				"NZ4":"CBS Canterbury Arena, Christchurch",
+				"NZ5":"Lion Foundation Arena, Dunedin"}
+
+var venueToWins = {}
+
 
 var scoreArray;
 //this function can be adapted for every year
@@ -81,10 +102,10 @@ function calculateHomeAdvantageTeam(){
 		}
 	}//end for
 
-	console.log("Home wins for Melbourne Vixens: " + teamWins["Melbourne Vixens"][0]);
-	console.log("Away wins for Melbourne Vixens: " + teamWins["Melbourne Vixens"][1]);
-	console.log("Melbourne Vixens has won " + teamWins["Melbourne Vixens"][2] + " against australian teams");
-	console.log("Melbourne Vixens has won " + teamWins["Melbourne Vixens"][3] + " against NZ teams");
+	// console.log("Home wins for Melbourne Vixens: " + teamWins["Melbourne Vixens"][0]);
+	// console.log("Away wins for Melbourne Vixens: " + teamWins["Melbourne Vixens"][1]);
+	// console.log("Melbourne Vixens has won " + teamWins["Melbourne Vixens"][2] + " against australian teams");
+	// console.log("Melbourne Vixens has won " + teamWins["Melbourne Vixens"][3] + " against NZ teams");
 }
 
 //if same country, return true or false
@@ -101,4 +122,12 @@ function checkSameCountry(team1, team2){
 	else{
 		return false;
 	}//end if
+}
+
+function calculateStadiumStats(){
+
+	//might be tidier to reparse the array/tableData
+	for(var i = 0;i<tableData.length;i++){
+
+	}	
 }
