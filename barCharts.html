@@ -5,12 +5,9 @@
 charset="utf-8"></script>
 <script src="js/loadData.js"></script>
 <script src="js/renderBarChart.js"></script>
+<!-- <script src="js/table.js"></script> -->
 
 <body onload="loadTable('bar');">
-<!-- <svg width="640" height="360">
-<rect x="0" y="0" width="640" height="360" fill="green" />
-</svg> -->
-Application to test drawing bar charts
 
 </body>
 
@@ -21,7 +18,7 @@ Application to test drawing bar charts
 <style>
 
 body {
-  font: 10px sans-serif;
+  font: 15px sans-serif;
 }
 
 .axis path,
@@ -29,7 +26,7 @@ body {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
-}
+}`
 
 .bar {
   fill: steelblue;
@@ -43,7 +40,7 @@ body {
 <body>
 <script>
 
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
+var margin = {top: 20, right: 20, bottom: 140, left: 50},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -64,8 +61,7 @@ var xAxis = d3.svg.axis()
 
 var yAxis = d3.svg.axis()
     .scale(y)
-    .orient("left")
-    .tickFormat(d3.format(".2s"));
+    .orient("left");
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -73,35 +69,58 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+ //this must be called from the d3.csv block in loadData.js
 function drawBarChart(){
-  //this must be called from a csv block!
 
-	console.log("asaasas");
-	
+  //first process data into an acceptable format for d3 libraries
+  //console.log(typeof(graphData));
+  var tempData = [];
+  for(var key in teamWins){
 
-  console.log(teamWins);
+  var tempEntry = {};//we can add to this object, then push to tempData, just need to consider which data to push
 
-  var keys = Object.keys(teamWins);
+   //may have if statements to see what to add to display
+    tempEntry["Team"] = key;//team name
+    tempEntry["Total Wins"] = teamWins[key][0]+teamWins[key][0];//home + away wins = total
+    tempEntry["Home Wins"] = teamWins[key][0];
+    tempEntry["Away Wins"] = teamWins[key][2];
+    tempData.push(tempEntry);//may sort this data later
+  //console.log(key);   
+  }
 
+  data = tempData;
+  var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "Team"; });//A and B
 
-  console.log(keys);
-
-
-
-  var ageNames = ["Total Wins, Away Wins"];
-
+  console.log(ageNames);
   data.forEach(function(d) {
     d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
   });
 
-  x0.domain(data.map(function(d) { return d.State; }));
+
+
+  x0.domain(data.map(function(d) { return d.Team; }));//need to modify this
+
+
+
   x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
   y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
 
   svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+      .call(xAxis)
+      .selectAll("text")  //we can transform the labels for the x ais here
+            .style("text-anchor", "end")
+            // .attr("dx", "10em")
+            // .attr("dy", "2em")
+            .attr("transform", "rotate(-45)");//rotate a negative degrees so the text won't go above the axis
+            // .attr("transform", function(d) {
+            //     return "rotate(20)" 
+            //     });
+      // .append("text")
+      // .attr("text-anchor", "end")
+      // .attr("x", width)
+      // .text("Teams");
 
   svg.append("g")
       .attr("class", "y axis")
@@ -111,15 +130,15 @@ function drawBarChart(){
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Population");
+      .text("Wins");//label for y axis
 
-  var state = svg.selectAll(".state")
+  var team = svg.selectAll(".team")
       .data(data)
     .enter().append("g")
       .attr("class", "g")
-      .attr("transform", function(d) { return "translate(" + x0(d.State) + ",0)"; });
+      .attr("transform", function(d) { return "translate(" + x0(d.Team) + ",0)"; });
 
-  state.selectAll("rect")
+  team.selectAll("rect")
       .data(function(d) { return d.ages; })
     .enter().append("rect")
       .attr("width", x1.rangeBand())
@@ -148,9 +167,115 @@ function drawBarChart(){
       .text(function(d) { return d; });
 }
 
+function update(){
+  //update the data and graph with transitions
+  var tempData = [];
+  for(var key in teamWins){
+
+  var tempEntry = {};//we can add to this object, then push to tempData, just need to consider which data to push
+
+   //may have if statements to see what to add to display
+    tempEntry["Team"] = key;//team name
+    tempEntry["Total Wins"] = 3;//home + away wins = total
+    tempEntry["Home Wins"] = 3;
+    tempData.push(tempEntry);//may sort this data later
+  //console.log(key);   
+  }
+
+  data = tempData;
+
+  //redrawthe graph with transitions
+  var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "Team"; });//A and B
+
+  console.log(ageNames);
+  data.forEach(function(d) {
+    d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
+  });
+
+
+
+  x0.domain(data.map(function(d) { return d.Team; }));//need to modify this
+
+
+
+  x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
+  y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+      .selectAll("text")  //we can transform the labels for the x ais here
+            .style("text-anchor", "end")
+            // .attr("dx", "10em")
+            // .attr("dy", "2em")
+            .attr("transform", "rotate(-45)");//rotate a negative degrees so the text won't go above the axis
+            // .attr("transform", function(d) {
+            //     return "rotate(20)" 
+            //     });
+      // .append("text")
+      // .attr("text-anchor", "end")
+      // .attr("x", width)
+      // .text("Teams");
+
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Wins");//label for y axis
+
+
+
+  var team = svg.selectAll(".team")
+      .data(data)
+    .enter().append("g")
+      .attr("class", "g")
+      .attr("transform", function(d) { return "translate(" + x0(d.Team) + ",0)"; });
+
+
+
+  team.selectAll("rect")
+      .data(function(d) { return d.ages; })//can't chain .transition from .data
+    .enter().append("rect")
+     .transition()
+      .duration(750)
+      .attr("width", x1.rangeBand())
+      .attr("x", function(d) { return x1(d.name); })
+      .attr("y", function(d) { return y(d.value); })
+      .attr("height", function(d) { return height - y(d.value); })
+      .style("fill", function(d) { return color(d.name); });
+
+  var legend = svg.selectAll(".legend")
+      .data(ageNames.slice().reverse())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
+
+}
+
 
 
 </script>
 
+
+<button type="button" onclick="update();" id = "u1">Test Transition</button>
 
 </html>

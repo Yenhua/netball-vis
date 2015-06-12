@@ -1,6 +1,7 @@
 'use strict';
 
 var tableData = [];
+var graphData = [];
 
 function loadTable(arg){
 
@@ -8,8 +9,9 @@ function loadTable(arg){
         tableData=data;
         console.log("tableData[0][Score] = " + tableData[0]["Score"]);
         calculateHomeAdvantageTeam();
-        populateTeams(); //This fills the arrays in the table script
+        //populateTeams(); //This fills the arrays in the table script
         if(arg=="bar"){
+        	graphData = tableData;
         	drawBarChart();//this can be defined anywhere as long as the html page knows it exists
         }
 
