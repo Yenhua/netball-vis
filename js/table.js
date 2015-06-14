@@ -41,7 +41,7 @@ var columns = [ //Set up all the column formatting and naming
 var table = d3.select('body')
 .append('table');
 
-//Create Header
+//Create Header of table
 table.append('thead')
 .append('tr')
 .selectAll('th')
@@ -50,6 +50,34 @@ table.append('thead')
 .append('th')
 .attr('class', function(d){return d.cl} )
 .text(function(d){return d.head;} );
+
+//Create body of table -- Untested so far
+table.append('tbody')
+.selectAll('tr')
+.data(teams)
+.enter()
+.append('tr')
+.select('td')
+.data(function(row, i) {
+//Evaluate column objects against the current row
+return columns.map(function(c)) {
+//Compute cell values
+var cell = {};
+d3.keys(c).forEach(function(k) {
+   cell[k] = typeof c[k] == 'function' ? c[k](row,i) : c[k];
+   });
+   return cell;
+}).enter()
+.append('td')
+.html(function(a){return a.html})
+.attr('class, function(x){return x.cl});
+
+
+
+
+
+
+
 
 
 
