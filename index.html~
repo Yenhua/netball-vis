@@ -2,16 +2,18 @@
 <head>
 <title>DataLoadTest</title>
 <meta charset="utf-8">
-<script src="http://d3js.org/d3.v3.min.js"</script>
-<script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script> 
 <script src="js/loadData.js"></script>
+<script src="js/table.js"></script>
 
 </head>
-<body onload="loadTable();">
+<body onload="loadTable('table');">
 <!-- <svg width="640" height="360">
 <rect x="0" y="0" width="640" height="360" fill="green" />
 </svg> -->
 Application to test loading/parsing CSV tables.
+
 
 </body>
 
@@ -19,7 +21,9 @@ Application to test loading/parsing CSV tables.
 
 
 <script>
+
 function linkToBar(){
+
 	location.href = "barCharts.html";
 }
 </script>

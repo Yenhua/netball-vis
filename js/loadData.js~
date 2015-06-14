@@ -9,13 +9,10 @@ function loadTable(arg){
         tableData=data;
         console.log("tableData[0][Score] = " + tableData[0]["Score"]);
         calculateHomeAdvantageTeam();
-        
+        populateTeams(); //This fills the arrays in the table script
         if(arg=="bar"){
         	graphData = tableData;
         	drawBarChart();//this can be defined anywhere as long as the html page knows it exists
-        }
-        else if(arg=="table"){
-        populateTeams(); //This fills the arrays in the table script
         }
 
   });
