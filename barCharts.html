@@ -48,7 +48,7 @@ var margin = {top: 20, right: 20, bottom: 140, left: 50},
     height = 500 - margin.top - margin.bottom;
 
 var x0 = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
+    .rangeRoundBands([0, width], .1);//
 
 var x1 = d3.scale.ordinal();
 
@@ -77,6 +77,7 @@ var svg = d3.select("#body").append("svg")
  //this must be called from the d3.csv block in loadData.js
 function drawBarChart(){
 
+
   //first process data into an acceptable format for d3 libraries
   //console.log(typeof(graphData));
   var tempData = [];
@@ -96,21 +97,22 @@ function drawBarChart(){
   }
 
   data = tempData;
-  var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "Team"; });//A and B
+  console.log(data);
+  var legendNames = d3.keys(data[0]).filter(function(key) { return key !== "Team"; });//A and B
 
-  console.log(ageNames);
+  console.log(legendNames);
   data.forEach(function(d) {
-    d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
+    d.legends = legendNames.map(function(name) { return {name: name, value: +d[name]}; });
   });
 
 
 
   x0.domain(data.map(function(d) { return d.Team; }));//need to modify this
 
+  console.log(x0.domain);
 
-
-  x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
-  y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
+  x1.domain(legendNames).rangeRoundBands([0, x0.rangeBand()]);
+  y.domain([0, d3.max(data, function(d) { return d3.max(d.legends, function(d) { return d.value; }); })]);
 
   svg.append("g")
       .attr("class", "x axis")
@@ -141,63 +143,48 @@ function drawBarChart(){
 
   var team = svg.selectAll(".team")
       .data(data)
-    .enter().append("g")
+    .enter().append("g")//each group is in a g
       .attr("class", "g")
       .attr("transform", function(d) { return "translate(" + x0(d.Team) + ",0)"; });
 
   team.selectAll("rect")
-      .data(function(d) { return d.ages; })
+      .data(function(d) { return d.legends; })
     .enter().append("rect")
     .attr("class", "team")
       .attr("width", x1.rangeBand())
-      .attr("x", function(d) { return x1(d.name); })
+      .attr("x", function(d) {return x1(d.name); })
       .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); })
       .style("fill", function(d) { return color(d.name); });
 
-  var legend = svg.selectAll(".legend")
-      .data(ageNames.slice().reverse())
-    .enter().append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-  legend.append("rect")
-      .attr("x", width - 18)
-      .attr("width", 18)
-      .attr("height", 18)
-      .style("fill", color);
-
-  legend.append("text")
-      .attr("x", width - 24)
-      .attr("y", 9)
-      .attr("dy", ".35em")
-      .style("text-anchor", "end")
-      .text(function(d) { return d; });
 }
 
 function update(){
   //update the data and graph with transitions
   var tempData = updateData();
   
+console.log("printing sorted data");
 
   data = tempData;
-
+console.log(data);
   //redrawthe graph with transitions
-  var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "Team"; });//A and B
+  var legendNames = d3.keys(data[0]).filter(function(key) { return key !== "Team"; });//A and B
 
 
   data.forEach(function(d) {
-    d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
+    d.legends = legendNames.map(function(name) { return {name: name, value: +d[name]}; });
   });
 
 
 
-  x0.domain(data.map(function(d) { return d.Team; }));//need to modify this
+  x0.domain(data.map(function(d) { return d.Team; }));//need to modify this if we're sorting?
 
+console.log("Aasa");
+console.log( x0.rangeBand());
 
-
-  x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
-  y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
+  x1.domain(legendNames).rangeRoundBands([0, x0.rangeBand()]);
+  y.domain([0, d3.max(data, function(d) { return d3.max(d.legends, function(d) { return d.value; }); })]);
 
 
   
@@ -218,9 +205,10 @@ transition.select(".x.axis")
 transition.selectAll(".team")
 .style("opacity", 0);
 
+
 transition.selectAll(".team")
       .attr("width", x1.rangeBand())
-      .attr("x", function(d) { return x1(d.name); })
+      .attr("x", function(d) {return x1(d.name); })
       .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); })
       .style("fill", function(d) { return color(d.name); });
@@ -228,25 +216,8 @@ transition.selectAll(".team")
 transition.selectAll(".team")
 .style("opacity", 1);
 
-
-  var legend = svg.selectAll(".legend")
-      .data(ageNames.slice().reverse())
-    .enter().append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-
-  legend.append("rect")
-      .attr("x", width - 18)
-      .attr("width", 18)
-      .attr("height", 18)
-      .style("fill", color);
-
-  legend.append("text")
-      .attr("x", width - 24)
-      .attr("y", 9)
-      .attr("dy", ".35em")
-      .style("text-anchor", "end")
-      .text(function(d) { return d; });
+transition.selectAll("g.g")//each group is contained in a g element
+   .attr("transform", function(d) { return "translate(" + x0(d.Team) + ",0)"; });
 
 }
 
@@ -316,15 +287,41 @@ function updateData(){
   }//end for
   color = d3.scale.ordinal()
     .range(newColorArray);
+
+
+
+  tempData = sortData(tempData);
+    //we have the data, now let's sort it
+
   return tempData;
   }
 
+function sortData(unsorted){
+
+  var sorted = [];
+  var sortType = "";
+
+  if(document.getElementById("sortTotal").checked){
+    
+  }
+  else if(document.getElementById("sortHome").checked){
+    sorted = unsorted.sort(function(a,b){
+      return b["Home Wins"] - a["Home Wins"];
+    });
+  }
+  
+   //console.log(sorted);
+
+return sorted;
+}//end sort
+
+
 function testFilter(){
 
-
- var transition = svg.transition().duration(750);
-  transition.selectAll(".team")
-        .style("opacity", 0);
+  sortData(data);
+ // var transition = svg.transition().duration(750);
+ //  transition.selectAll(".team")
+ //        .style("opacity", 0);
 }
 
 </script>
@@ -336,7 +333,7 @@ function testFilter(){
 
 
 <form>
-  Filtering:
+  Legend Filtering:
     <div>
         <label><input type="checkbox" id="checkTotal"/> Total Wins</label>
         <label><input type="checkbox" id="checkHome"/> Home Wins</label>
@@ -346,6 +343,23 @@ function testFilter(){
         <button type="button" onclick="update();" id = "u1">Update</button>
          <button type="button" onclick="testFilter();" id = "t">Don't click</button>
     </div>
+    Sorting:
+    <div>
+        <label><input type="radio" name="sort" id="sortTotal"/> Total Wins</label>
+        <label><input type="radio" name="sort" id="sortHome"/> Home Wins</label>
+        <label><input type="radio" name="sort" id="sortAway"/> Away Wins</label>
+        <label><input type="radio" name="sort" id="SortSame"/> Same Country Wins</label>
+        <label><input type="radio" name="sort" id="SortDiff"/> Different Country Wins</label>
+    </div>
 </form>
+
+
+<form>
+  Country Filtering/Highlighting: (SoonTM)
+    <div>
+
+    </div>
+</form>
+
 
 </html>
