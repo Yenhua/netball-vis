@@ -22,7 +22,7 @@ for(var i = 0; i < keys.length; i++){
   teams.push(team);
 
 }
-console.log(teams);
+console.log(teams[1]);
 drawTable();
 };
 
@@ -30,26 +30,54 @@ drawTable();
 //Draws the table after the data has been filled
 function drawTable(){
 var columns = [ //Set up all the column formatting and naming
-  {head: 'Team Name', cl: 'title', html: function(row){return r.name;} },
-  {head: 'Home Wins', cl: 'num', html: function(row){return r.home;} },
-  {head: 'Away Wins', cl: 'num', html: function(row){return r.away;} },
-  {head: 'Same Country Wins', cl: 'num', html: function(row){return r.same;} },
-  {head: 'Different Country Wins', cl: 'num', html: function(row){return r.different;} }
+  {head: 'Team Name', cl: 'title', html: ƒ('name') },
+  {head: 'Home Wins', cl: 'num', html: ƒ('home') },
+  {head: 'Away Wins', cl: 'num', html: ƒ('away') },
+  {head: 'Same Country Wins', cl: 'num', html: ƒ('same') },
+  {head: 'Different Country Wins', cl: 'num', html: ƒ('different') }
 ];
 
 //Start drawing the table
 var table = d3.select('body')
 .append('table');
 
-//Create Header
+//Create Header of table
 table.append('thead')
 .append('tr')
 .selectAll('th')
 .data(columns)
 .enter()
 .append('th')
-.attr('class', function(d){return d.cl} )
-.text(function(d){return d.head;} );
+.attr('class', ƒ('cl') )
+.text(ƒ('head'));
+
+//Create body of table -- Untested so far
+table.append('tbody')
+.selectAll('tr')
+.data(teams).enter()
+.append('tr')
+.selectAll('td')
+.data(function(row, i) {
+//Evaluate column objects against the current row
+return columns.map(function(c) {
+//Compute cell values
+var cell = {};
+d3.keys(c).forEach(function(k) {
+   cell[k] = typeof c[k] == 'function' ? c[k](row,i) : c[k];
+   });
+   return cell;
+});
+}).enter()
+.append('td')
+.html(ƒ('html'))
+.attr('class', ƒ('cl'));
+
+
+
+
+
+
+
 
 
 

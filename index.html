@@ -2,13 +2,20 @@
 <head>
 <title>DataLoadTest</title>
 <meta charset="utf-8">
-<script src="http://d3js.org/d3.v3.min.js"</script>
-<script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script> <!--This is a package of d3 convenience methods (Under open license)-->
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script> 
 <script src="js/loadData.js"></script>
 <script src="js/table.js"></script>
+<style type="text/css">
+body { font-family: 'Helvetica Neue', Helvetica; font-weight:300; padding:20px;}
+th { text-align: left;}
+th, td { padding: 0 1em 0.5ex 0;}
+th.center, td.center{ text-align: center;}
+th.num, td.num { text-align: right; }
+</style>
 
 </head>
-<body onload="loadTable();">
+<body onload="loadTable('table');">
 <!-- <svg width="640" height="360">
 <rect x="0" y="0" width="640" height="360" fill="green" />
 </svg> -->

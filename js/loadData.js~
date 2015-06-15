@@ -9,13 +9,10 @@ function loadTable(arg){
         tableData=data;
         console.log("tableData[0][Score] = " + tableData[0]["Score"]);
         calculateHomeAdvantageTeam();
-        
+        populateTeams(); //This fills the arrays in the table script
         if(arg=="bar"){
         	graphData = tableData;
         	drawBarChart();//this can be defined anywhere as long as the html page knows it exists
-        }
-        else if(arg=="table"){
-        populateTeams(); //This fills the arrays in the table script
         }
 
   });
@@ -135,113 +132,4 @@ function calculateStadiumStats(){
 	for(var i = 0;i<tableData.length;i++){
 
 	}
-}
-
-
-
-var allData = [];
-var tempObject = [];
-var yearIndex = "8";
-var filename = "data/200" + yearIndex + "-Table1.csv"
-var errorOutput;
-/*The following functions are for loading multiple unknown amounts of csv files
-The aim is to allow future data to be added easily
-*/
-function loadAll(arg){
-
-	var numFiles = countFiles();
-	var currentCount = 0;
-	var q = queue();
-
-	
-	while(currentCount<numFiles){//load until we get a error...aka file not found
-		try{
-			q = q.defer(d3.csv, filename);//append defers for every file
-			//console.log(currentCount);
-			currentCount++;
-		}
-		catch(err){//should not happen now we know how many files are there...
-			console.log("error, loading more files than found");
-			break;
-			
-		}
-		var yearInt = parseInt(yearIndex);
-		yearInt++;
-		yearIndex = yearInt.toString();
-
-		if(yearInt>=10){
-			filename = "data/20" + yearIndex + "-Table1.csv"
-		}
-		else{
-			filename = "data/200" + yearIndex + "-Table1.csv"
-		}
-		
-	}
-	console.log(currentCount);
-
-
-	q.await(onDataLoaded);
-}
-	// loadCSV("Dsdfsdf.csv");
-	// console.log(filename);
-
-
-
-function onDataLoaded(error){
-	console.log("Asas");
-	console.log(arguments.length);
-	console.log(arguments[1]);
-	console.log(arguments[2]);
-	//for (var i=0; i<arguments.length; i++) console.log(arguments[i]);
-}
-
-
-
-
-function loadCSV(filename){
-	d3.csv(filename, function(error,data) {
-	if (error != null) {  //If error is not null, something went wrong.
-		return error;
-          
-    } 
-    else {     
-
- 	tempObject = {};
- 	tempObject[yearIndex] = data;//this is a year to dataArray object
- 	allData.push(tempObject);
- 	console.log(error);
- 	}
-  });
-}
-
-function countFiles(){
-
-	var year = "8";
-	var fname = "data/200" + yearIndex + "-Table1.csv"
-	var count = 0;;
-	var q = queue();
-
-    //this is a terrible way to find the number of files to read
-	while(true){//load until we get a error...aka file not found
-		try{
-			q = q.defer(d3.csv, fname);//append defers for every filw
-			count++;
-		}
-		catch(err){
-			break;
-			
-		}
-		var yearInt = parseInt(year);
-		yearInt++;
-		year = yearInt.toString();
-
-		if(yearInt>=10){
-			fname = "data/20" + year + "-Table1.csv"
-		}
-		else{
-			fname = "data/200" + year + "-Table1.csv"
-		}
-	}
-	console.log(count);
-	return count;
 }
