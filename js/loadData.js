@@ -138,8 +138,10 @@ function calculateStadiumStats(){
 }
 
 
+//Following code is for multiple file reading
 
-var allData = [];
+var allData = [];//this is a year to tableData object
+var yearToWins = [];
 var tempObject = [];
 var yearIndex = "8";
 var filename = "data/200" + yearIndex + "-Table1.csv"
@@ -182,36 +184,76 @@ function loadAll(arg){
 
 	q.await(onDataLoaded);
 }
-	// loadCSV("Dsdfsdf.csv");
-	// console.log(filename);
 
 
 
+//javascript has a "magical" arguments object which is a list of all arguments passed to this function from queue.js
 function onDataLoaded(error){
-	console.log("Asas");
-	console.log(arguments.length);
-	console.log(arguments[1]);
-	console.log(arguments[2]);
-	//for (var i=0; i<arguments.length; i++) console.log(arguments[i]);
+	var filesRead = arguments.length - 1;//(0th argument is error and should be null)
+	var currentYear = "2008";
+	//console.log(filesRead);
+
+	//create a object from string file/year to data
+	for(var i = 1; i<=filesRead;i++){
+		allData[currentYear] = arguments[i];
+		var yearInt = parseInt(currentYear);
+		
+
+		var tempWins = {};//team to number of wins for a particular year
+		 //now we want year to teamWins objects
+	 	for(var key in teamWins){
+	 		tempWins[key] = [0,0,0,0];
+	 	}
+	 	yearToWins[currentYear] = tempWins;
+
+	 	calculateTableWins(currentYear,allData[currentYear]);
+
+	 	yearInt++;
+		currentYear = yearInt.toString();
+	 }
+
+
+	//we now have year to tableData for each file
+	 console.log(arguments[1]);
+
+	 //now to calculate the appropriate wins
 }
 
+//Given a data from a table,
+function calculateTableWins(year,table){
+	//very similar to the individual case, parse through every row in the data to identify wins for each team
+	for(var i = 0;i<table.length;i++){//consider every game that has happened in this year(groups + playoffs)
+		var stringScore = table[i]["Score"];
+		//console.log(stringScore);
+		if(stringScore!=""){//if it's not a bye
+			scoreArray = stringScore.split(' ');//js doesn't split "-" nicely sometimes...safer to split via whitespace
+			var homeScore = parseInt(scoreArray[0]);
+			var awayScore = parseInt(scoreArray[2]);
 
+			var teamWon;
+			var teamLost;
+			if(homeScore>awayScore){
+				//home team won
+				teamWon = table[i]["Home Team"];
+				teamLost = table[i]["Away Team"];
+				// console.log(teamWon)
+				yearToWins[year][teamWon][0]++;
+				//teamWins[teamWon][0]++;
+			}else{
+				teamWon = table[i]["Away Team"];
+				teamLost = table[i]["Home Team"];
+				yearToWins[year][teamWon][1]++;
+			}
+			//console.log(scoreArray);
 
-
-function loadCSV(filename){
-	d3.csv(filename, function(error,data) {
-	if (error != null) {  //If error is not null, something went wrong.
-		return error;
-          
-    } 
-    else {     
-
- 	tempObject = {};
- 	tempObject[yearIndex] = data;//this is a year to dataArray object
- 	allData.push(tempObject);
- 	console.log(error);
- 	}
-  });
+			var result = checkSameCountry(teamWon,teamLost);
+			if(result==true){
+				yearToWins[year][teamWon][2]++;
+			}else{
+				yearToWins[year][teamWon][3]++;
+			}
+		}
+	}//end for
 }
 
 function countFiles(){
