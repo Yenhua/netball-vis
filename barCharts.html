@@ -74,7 +74,7 @@ var svg = d3.select("#body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var selectedYear = "2009";
+var selectedYear = "2008";
 
  //this must be called from the d3.csv block in loadData.js
 function drawBarChart(){
@@ -92,7 +92,7 @@ function drawBarChart(){
   var tempEntry = {};//we can add to this object, then push to tempData, just need to consider which data to push
 
     tempEntry["Team"] = key;//team name
-    tempEntry["Total Wins"] = curTeamWins[key][0]+curTeamWins[key][1];//home + away wins = total
+    tempEntry["Total Wins"] = curTeamWins[key][4];//home + away wins = total
     tempEntry["Home Wins"] = curTeamWins[key][0];
     tempEntry["Away Wins"] = curTeamWins[key][1];
      tempEntry["Same Country Wins"] = curTeamWins[key][2];
@@ -152,12 +152,15 @@ function drawBarChart(){
       .data(function(d) { return d.legends; })
     .enter()
     .append("rect")
+    .transition()
     .attr("class", "team")
       .attr("width", x1.rangeBand())
       .attr("x", function(d) {return x1(d.name); })
       .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); })
       .style("fill", function(d) { return color(d.name); });
+
+
 
 
     var legend = svg.selectAll(".legend")
@@ -283,7 +286,7 @@ function updateData(){
 
     if(showTotal){
       newColorArray[0] = colorArray[0];
-      tempEntry["Total Wins"] = curTeamWins[key][0]+curTeamWins[key][1];
+      tempEntry["Total Wins"] = curTeamWins[key][4];
     }
     else{
       newColorArray[0] = "transparent";
@@ -328,7 +331,7 @@ function updateData(){
 
 
 
- // tempData = sortData(tempData);
+  tempData = sortData(tempData);
     //we have the data, now let's sort it
 
   return tempData;
@@ -345,11 +348,32 @@ function sortData(unsorted){
   }
 
   if(document.getElementById("sortTotal").checked){
+     sorted = unsorted.sort(function(a,b){
+      console.log(b["Away Wins"]);
+      return b["Total Wins"] - a["Total Wins"];
+    });
+
     
   }
   else if(document.getElementById("sortHome").checked){
     sorted = unsorted.sort(function(a,b){
+
       return b["Home Wins"] - a["Home Wins"];
+    });
+  }
+  else if(document.getElementById("sortAway").checked){
+    sorted = unsorted.sort(function(a,b){
+      return b["Away Wins"] - a["Away Wins"];
+    });
+  }
+  else if(document.getElementById("SortSame").checked){
+    sorted = unsorted.sort(function(a,b){
+      return b["Same Country Wins"] - a["Same Country Wins"];
+    });
+  }
+  else if(document.getElementById("SortDiff").checked){
+    sorted = unsorted.sort(function(a,b){
+      return b["Different Country Wins"] - a["Different Country Wins"];
     });
   }
   
@@ -359,7 +383,15 @@ return sorted;
 }//end sort
 
 
-function test(){
+function changeYear(){
+
+document.getElementById("checkTotal").checked = "checked";
+document.getElementById("checkHome").checked = "checked";
+document.getElementById("checkAway").checked = "checked";
+document.getElementById("checkSame").checked = "checked";
+document.getElementById("checkDiff").checked = "checked";
+
+update();
 
     var temp = svg.selectAll("g").remove();
     
@@ -370,6 +402,7 @@ function test(){
 
   selectedYear = document.getElementById("yearSelect").value;
   drawBarChart();
+  update();
  // // var transition = svg.transition().duration(750);
  // //  transition.selectAll(".team")
  // //        .style("opacity", 0);
@@ -410,15 +443,18 @@ function updateYear(){
 
 
 <form>
+   
+    
+
   Legend Filtering:
     <div>
-        <label><input type="checkbox" id="checkTotal"/> Total Wins</label>
-        <label><input type="checkbox" id="checkHome"/> Home Wins</label>
-        <label><input type="checkbox" id="checkAway"/> Away Wins</label>
-        <label><input type="checkbox" id="checkSame"/> Same Country Wins</label>
-        <label><input type="checkbox" id="checkDiff"/> Different Country Wins</label>
-        <button type="button" onclick="update();" id = "u1">Update</button>
-         <button type="button" onclick="test();" id = "t">Don't click</button>
+        <label><input type="checkbox" checked="checked" id="checkTotal"/> Total Wins</label>
+        <label><input type="checkbox" checked="checked" id="checkHome"/> Home Wins</label>
+        <label><input type="checkbox" checked="checked" id="checkAway"/> Away Wins</label>
+        <label><input type="checkbox" checked="checked" id="checkSame"/> Same Country Wins</label>
+        <label><input type="checkbox" checked="checked" id="checkDiff"/> Different Country Wins</label>
+        <button type="button" onclick="update();" id = "u1">Update Filters and apply sorting</button>
+        
     </div>
     Sorting:
     <div>
@@ -427,12 +463,13 @@ function updateYear(){
         <label><input type="radio" name="sort" id="sortAway"/> Away Wins</label>
         <label><input type="radio" name="sort" id="SortSame"/> Same Country Wins</label>
         <label><input type="radio" name="sort" id="SortDiff"/> Different Country Wins</label>
-        <label><input type="radio" name="sort" id="unsort"/>No sorting</label>
+        <label><input type="radio" checked="checked" name="sort" id="unsort"/>No sorting</label>
     </div>
 
-    Year Selection:
+    Year Selection (will reenable all filters):
     <div id="year">
     </div>
+    <button type="button" onclick="changeYear();" id = "t">Chnage Year</button>
 </form>
 
 

@@ -27,17 +27,17 @@ function loadTable(arg){
 //may need to create an additional one for stadiums
 var teamWins = {//AUS teams
 				//"name":[home wins,away wins,win against same country, win against different country]
-				"Adelaide Thunderbirds":[0,0,0,0],
-				"Queensland Firebirds":[0,0,0,0],
-				"New South Wales Swifts":[0,0,0,0],
-				"Melbourne Vixens":[0,0,0,0],
-				"West Coast Fever":[0,0,0,0],
+				"Adelaide Thunderbirds":[0,0,0,0,0],
+				"Queensland Firebirds":[0,0,0,0,0],
+				"New South Wales Swifts":[0,0,0,0,0],
+				"Melbourne Vixens":[0,0,0,0,0],
+				"West Coast Fever":[0,0,0,0,0],
 				//NZ teams
-				"Northern Mystics":[0,0,0,0],
-				"Waikato Bay of Plenty Magic":[0,0,0,0],
-				"Central Pulse":[0,0,0,0],
-				"Canterbury Tactix":[0,0,0,0],
-				"Southern Steel":[0,0,0,0]}
+				"Northern Mystics":[0,0,0,0,0],
+				"Waikato Bay of Plenty Magic":[0,0,0,0,0],
+				"Central Pulse":[0,0,0,0,0],
+				"Canterbury Tactix":[0,0,0,0,0],
+				"Southern Steel":[0,0,0,0,0]}
 
 var teamID = {//AUS teams
 				"Adelaide Thunderbirds":"AUS1",
@@ -205,7 +205,7 @@ function onDataLoaded(error){
 		var tempWins = {};//team to number of wins for a particular year
 		 //now we want year to teamWins objects
 	 	for(var key in teamWins){
-	 		tempWins[key] = [0,0,0,0];
+	 		tempWins[key] = [0,0,0,0,0];
 	 	}
 	 	yearToWins[currentYear] = tempWins;
 
@@ -253,11 +253,13 @@ function calculateTableWins(year,table){
 				teamLost = table[i]["Away Team"];
 				
 				yearToWins[year][teamWon][0]++;
+				yearToWins[year][teamWon][4]++;//increment total wins
 				//teamWins[teamWon][0]++;
 			}else{
 				teamWon = table[i]["Away Team"];
 				teamLost = table[i]["Home Team"];
 				yearToWins[year][teamWon][1]++;
+				yearToWins[year][teamWon][4]++;
 			}
 			//console.log(scoreArray);
 
@@ -269,6 +271,9 @@ function calculateTableWins(year,table){
 			}
 		}
 	}//end for
+
+
+
 }
 
 function countFiles(){
