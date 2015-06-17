@@ -146,6 +146,8 @@ var tempObject = [];
 var yearIndex = "8";
 var filename = "data/200" + yearIndex + "-Table1.csv"
 var errorOutput;
+var totalFilesRead = 0;
+var loadArg;
 /*The following functions are for loading multiple unknown amounts of csv files
 The aim is to allow future data to be added easily
 */
@@ -154,7 +156,7 @@ function loadAll(arg){
 	var numFiles = countFiles();
 	var currentCount = 0;
 	var q = queue();
-
+	loadArg = arg;
 	
 	while(currentCount<numFiles){//load until we get a error...aka file not found
 		try{
@@ -190,6 +192,7 @@ function loadAll(arg){
 //javascript has a "magical" arguments object which is a list of all arguments passed to this function from queue.js
 function onDataLoaded(error){
 	var filesRead = arguments.length - 1;//(0th argument is error and should be null)
+	var totalFilesRead = filesRead;
 	var currentYear = "2008";
 	//console.log(filesRead);
 
@@ -212,23 +215,35 @@ function onDataLoaded(error){
 		currentYear = yearInt.toString();
 	 }
 
+	 
+	 console.log(arguments);
+	 if(loadArg=="bar"){
+        	console.log(loadArg);
+        	initDropMenu();
+        	drawBarChart();
 
-	//we now have year to tableData for each file
-	 console.log(arguments[1]);
-
-	 //now to calculate the appropriate wins
+      }
 }
 
 //Given a data from a table,
 function calculateTableWins(year,table){
+
+	var intYear = parseInt(year);
+
 	//very similar to the individual case, parse through every row in the data to identify wins for each team
 	for(var i = 0;i<table.length;i++){//consider every game that has happened in this year(groups + playoffs)
 		var stringScore = table[i]["Score"];
-		//console.log(stringScore);
 		if(stringScore!=""){//if it's not a bye
-			scoreArray = stringScore.split(' ');//js doesn't split "-" nicely sometimes...safer to split via whitespace
+			scoreArray = stringScore.split('-');
+			if(scoreArray.length!=2){
+				scoreArray = stringScore.split('–');//difference between hypens, the second one is &#8211
+			}
+			//console.log(scoreArray);
+
+
 			var homeScore = parseInt(scoreArray[0]);
-			var awayScore = parseInt(scoreArray[2]);
+			var awayScore = parseInt(scoreArray[1]);
+
 
 			var teamWon;
 			var teamLost;
@@ -236,7 +251,7 @@ function calculateTableWins(year,table){
 				//home team won
 				teamWon = table[i]["Home Team"];
 				teamLost = table[i]["Away Team"];
-				// console.log(teamWon)
+				
 				yearToWins[year][teamWon][0]++;
 				//teamWins[teamWon][0]++;
 			}else{

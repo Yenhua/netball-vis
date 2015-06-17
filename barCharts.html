@@ -5,9 +5,10 @@
 charset="utf-8"></script>
 <script src="js/loadData.js"></script>
 <script src="js/renderBarChart.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
 <!-- <script src="js/table.js"></script> -->
 
-<body onload="loadTable('bar');">
+<body onload="loadAll('bar');">
 
 </body>
 
@@ -42,7 +43,6 @@ body {
 
 
 <script>
-
 var margin = {top: 20, right: 20, bottom: 140, left: 50},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
@@ -74,6 +74,8 @@ var svg = d3.select("#body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+var selectedYear = "2009";
+
  //this must be called from the d3.csv block in loadData.js
 function drawBarChart(){
 
@@ -81,26 +83,27 @@ function drawBarChart(){
   //first process data into an acceptable format for d3 libraries
   //console.log(typeof(graphData));
   var tempData = [];
+
+  var curTeamWins = yearToWins[selectedYear];
+
   for(var key in teamWins){
 
     //add all the information for now
   var tempEntry = {};//we can add to this object, then push to tempData, just need to consider which data to push
 
     tempEntry["Team"] = key;//team name
-    tempEntry["Total Wins"] = teamWins[key][0]+teamWins[key][1];//home + away wins = total
-    tempEntry["Home Wins"] = teamWins[key][0];
-    tempEntry["Away Wins"] = teamWins[key][1];
-     tempEntry["Same Country Wins"] = teamWins[key][2];
-  tempEntry["Different Country Wins"] = teamWins[key][3];
+    tempEntry["Total Wins"] = curTeamWins[key][0]+curTeamWins[key][1];//home + away wins = total
+    tempEntry["Home Wins"] = curTeamWins[key][0];
+    tempEntry["Away Wins"] = curTeamWins[key][1];
+     tempEntry["Same Country Wins"] = curTeamWins[key][2];
+  tempEntry["Different Country Wins"] = curTeamWins[key][3];
     tempData.push(tempEntry);//may sort this data later
 
   }
 
   data = tempData;
-  console.log(data);
   var legendNames = d3.keys(data[0]).filter(function(key) { return key !== "Team"; });//A and B
 
-  console.log(legendNames);
   data.forEach(function(d) {
     d.legends = legendNames.map(function(name) { return {name: name, value: +d[name]}; });
   });
@@ -108,8 +111,6 @@ function drawBarChart(){
 
 
   x0.domain(data.map(function(d) { return d.Team; }));//need to modify this
-
-  console.log(x0.domain);
 
   x1.domain(legendNames).rangeRoundBands([0, x0.rangeBand()]);
   y.domain([0, d3.max(data, function(d) { return d3.max(d.legends, function(d) { return d.value; }); })]);
@@ -149,7 +150,8 @@ function drawBarChart(){
 
   team.selectAll("rect")
       .data(function(d) { return d.legends; })
-    .enter().append("rect")
+    .enter()
+    .append("rect")
     .attr("class", "team")
       .attr("width", x1.rangeBand())
       .attr("x", function(d) {return x1(d.name); })
@@ -158,16 +160,49 @@ function drawBarChart(){
       .style("fill", function(d) { return color(d.name); });
 
 
+    var legend = svg.selectAll(".legend")
+      .data(legendNames.slice().reverse())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
+
+
+
 }
 
+
+
+//DOM < data = enter()
+//DOM > data = exit()
+//DOM = data = update()
 function update(){
   //update the data and graph with transitions
-  var tempData = updateData();
-  
-console.log("printing sorted data");
 
+  //first update the current year
+ selectedYear = document.getElementById("yearSelect").value;
+  
+
+
+// console.log("old data:")
+// console.log(data);
+  var tempData = updateData();
+
+//console.log("new data:");
   data = tempData;
-console.log(data);
+ //  console.log(data);
   //redrawthe graph with transitions
   var legendNames = d3.keys(data[0]).filter(function(key) { return key !== "Team"; });//A and B
 
@@ -179,9 +214,6 @@ console.log(data);
 
 
   x0.domain(data.map(function(d) { return d.Team; }));//need to modify this if we're sorting?
-
-console.log("Aasa");
-console.log( x0.rangeBand());
 
   x1.domain(legendNames).rangeRoundBands([0, x0.rangeBand()]);
   y.domain([0, d3.max(data, function(d) { return d3.max(d.legends, function(d) { return d.value; }); })]);
@@ -200,6 +232,10 @@ transition.select(".x.axis")
          .selectAll("text")  
             .style("text-anchor", "end")
             .attr("transform", "rotate(-45)");//apply the same transformations as the text
+
+
+
+
 
 
 transition.selectAll(".team")
@@ -235,8 +271,10 @@ function updateData(){
   var tempData = [];
 
 
+  var curTeamWins = yearToWins[selectedYear];
 
-  for(var key in teamWins){
+
+  for(var key in curTeamWins){
 
     var tempEntry = {};//we can add to this object, then push to tempData, just need to consider which data to push
 
@@ -245,7 +283,7 @@ function updateData(){
 
     if(showTotal){
       newColorArray[0] = colorArray[0];
-      tempEntry["Total Wins"] = teamWins[key][0]+teamWins[key][1];
+      tempEntry["Total Wins"] = curTeamWins[key][0]+curTeamWins[key][1];
     }
     else{
       newColorArray[0] = "transparent";
@@ -253,7 +291,7 @@ function updateData(){
 
     if(showHome){
       newColorArray[1] = colorArray[1];
-      tempEntry["Home Wins"] = teamWins[key][0];
+      tempEntry["Home Wins"] = curTeamWins[key][0];
     }
     else{
       newColorArray[1] = "transparent";
@@ -261,7 +299,7 @@ function updateData(){
 
     if(showAway){
       newColorArray[2] = colorArray[2];
-      tempEntry["Away Wins"] = teamWins[key][1];
+      tempEntry["Away Wins"] = curTeamWins[key][1];
     }
     else{
       newColorArray[2] = "transparent";
@@ -269,7 +307,7 @@ function updateData(){
 
     if(showSame){
       newColorArray[3] = colorArray[3];
-      tempEntry["Same Country Wins"] = teamWins[key][2];
+      tempEntry["Same Country Wins"] = curTeamWins[key][2];
     }
     else{
       newColorArray[3] = "transparent";
@@ -277,7 +315,7 @@ function updateData(){
 
     if(showDiff){
       newColorArray[4] = colorArray[4];
-      tempEntry["Different Country Wins"] = teamWins[key][3];
+      tempEntry["Different Country Wins"] = curTeamWins[key][3];
     }
     else{
       newColorArray[4] = "transparent";
@@ -290,7 +328,7 @@ function updateData(){
 
 
 
-  tempData = sortData(tempData);
+ // tempData = sortData(tempData);
     //we have the data, now let's sort it
 
   return tempData;
@@ -300,6 +338,11 @@ function sortData(unsorted){
 
   var sorted = [];
   var sortType = "";
+
+
+  if(document.getElementById("unsort").checked){
+    return unsorted;
+  }
 
   if(document.getElementById("sortTotal").checked){
     
@@ -316,12 +359,46 @@ return sorted;
 }//end sort
 
 
-function testFilter(){
+function test(){
 
-  sortData(data);
- // var transition = svg.transition().duration(750);
- //  transition.selectAll(".team")
- //        .style("opacity", 0);
+    var temp = svg.selectAll("g").remove();
+    
+
+
+ //  var transition = svg.transition().duration(750);
+ //  transition.selectAll(".team").style("opacity", 0);
+
+  selectedYear = document.getElementById("yearSelect").value;
+  drawBarChart();
+ // // var transition = svg.transition().duration(750);
+ // //  transition.selectAll(".team")
+ // //        .style("opacity", 0);
+ // transition.selectAll(".team").style("opacity", 1);
+}
+
+
+function initDropMenu(){
+  var newDiv=document.createElement('div');
+
+  var yearArray = [];
+  for(var key in allData){//for each should loop in order of keys added when data is loaded
+    yearArray.push(key);
+  }
+  yearArray.push("All");
+  var html = '<select id = "yearSelect">', yearArray , i;
+
+
+    for(i = 0; i < yearArray .length; i++) {
+        html += "<option value='"+yearArray [i]+"'>"+yearArray [i]+"</option>";
+    }
+    html += '</select>';
+    newDiv.innerHTML= html;
+    document.getElementById("year").appendChild(newDiv);
+}
+
+function updateYear(){
+
+
 }
 
 </script>
@@ -341,7 +418,7 @@ function testFilter(){
         <label><input type="checkbox" id="checkSame"/> Same Country Wins</label>
         <label><input type="checkbox" id="checkDiff"/> Different Country Wins</label>
         <button type="button" onclick="update();" id = "u1">Update</button>
-         <button type="button" onclick="testFilter();" id = "t">Don't click</button>
+         <button type="button" onclick="test();" id = "t">Don't click</button>
     </div>
     Sorting:
     <div>
@@ -350,6 +427,11 @@ function testFilter(){
         <label><input type="radio" name="sort" id="sortAway"/> Away Wins</label>
         <label><input type="radio" name="sort" id="SortSame"/> Same Country Wins</label>
         <label><input type="radio" name="sort" id="SortDiff"/> Different Country Wins</label>
+        <label><input type="radio" name="sort" id="unsort"/>No sorting</label>
+    </div>
+
+    Year Selection:
+    <div id="year">
     </div>
 </form>
 
