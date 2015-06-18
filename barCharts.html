@@ -46,7 +46,7 @@ body {
 
 
 <script>
-var margin = {top: 20, right: 20, bottom: 140, left: 50},
+var margin = {top: 20, right: 20, bottom: 140, left: 80},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -69,7 +69,8 @@ var xAxis = d3.svg.axis()
 
 var yAxis = d3.svg.axis()
     .scale(y)
-    .orient("left");
+    .orient("left")
+    .tickFormat(d3.format("d"));//still leaves ticks for non integers
 
 var svg = d3.select("#body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -78,6 +79,8 @@ var svg = d3.select("#body").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var selectedYear = "2008";
+
+var highlight = false;
 
  //this must be called from the d3.csv block in loadData.js
 function drawBarChart(){
@@ -135,12 +138,14 @@ function drawBarChart(){
       // .attr("x", width)
       // .text("Teams");
 
+
+
   svg.append("g")
       .attr("class", "y axis")
       .call(yAxis)
     .append("text")
       .attr("transform", "rotate(-90)")
-      .attr("y", 6)
+      .attr("y", -40)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
       .text("Wins");//label for y axis
@@ -191,9 +196,7 @@ function drawBarChart(){
 
 
 
-//DOM < data = enter()
-//DOM > data = exit()
-//DOM = data = update()
+
 function update(){
   //update the data and graph with transitions
 
@@ -240,7 +243,37 @@ transition.select(".x.axis")
             //.style("stroke", "blue")
             .attr("transform", "rotate(-45)");//apply the same transformations as the text
 
+if(highlight==true){
+  svg.selectAll('.tick').each(function(d, i) {
+    // In here, d is the ordinal value associated with each tick
+    // and 'this' is the dom element
 
+    var tickString = d.toString();
+
+    if(tickString.match(/[a-z]/i)) {// alphabet letters found
+      var countryID = teamID[d];
+    // console.log(countryID);
+
+    if(countryID.indexOf("NZ")>-1){
+      //it's a NZ team
+       d3.select(this).style("stroke", "blue")
+      .attr("class","high");
+    }else if(countryID.indexOf("AUS")>-1){//AUZ Team
+       d3.select(this).style("stroke", "green")
+      .attr("class","high");
+    }
+    }
+    
+
+    
+
+    
+  });   
+
+
+}else{
+  svg.selectAll(".high").remove();
+}
 
 
 
@@ -266,6 +299,10 @@ transition.selectAll("g.g")//each group is contained in a g element
 
 function updateData(){
 
+
+  if(highlight==true){
+    svg.selectAll(".high").remove();
+  }
 
   var showTotal = document.getElementById("checkTotal").checked;
   var showHome = document.getElementById("checkHome").checked;
@@ -353,7 +390,6 @@ function sortData(unsorted){
 
   if(document.getElementById("sortTotal").checked){
      sorted = unsorted.sort(function(a,b){
-      console.log(b["Away Wins"]);
       return b["Total Wins"] - a["Total Wins"];
     });
 
@@ -434,9 +470,26 @@ function initDropMenu(){
     document.getElementById("year").appendChild(newDiv);
 }
 
-function updateYear(){
+//toggles between highlight NZ and AUS teams
+function hl(){
+  var oldOption;
+
+if(highlight==true){
+  oldOption = true;
+}
+else{
+  oldOption = false;
+}
 
 
+  if(oldOption==false){
+    highlight = true;
+  }
+  else{
+    highlight = false;
+  }
+
+  update();
 }
 
 </script>
@@ -479,9 +532,9 @@ function updateYear(){
 
 
 <form>
-  Country Filtering/Highlighting/Regular/PlayOff: (SoonTM)
+  Toggle Highlight NZ/AUS teams
     <div>
-
+      <button type="button" onclick="hl();" id = "highlight">Highlight</button>
     </div>
 </form>
 
