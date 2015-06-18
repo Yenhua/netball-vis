@@ -16,6 +16,7 @@ th.num, td.num { text-align: right; }
 table{display: flex; align-items: center; justify-content: center;}
 footer{position:absolute; bottom: 0; justify-content: center; background:#000000;}
 .topLogo{width:10px; height:10px;}
+button{text-align: center; width: 85px; margin-left:9px;margin-top:5px;}
 </style>
 
 </head>
@@ -24,11 +25,15 @@ footer{position:absolute; bottom: 0; justify-content: center; background:#000000
 <rect x="0" y="0" width="640" height="360" fill="green" />
 </svg> -->
 <div class="topLogo">
-<img src="images/anz_logo_transparent.png" alt="ANZ Netball Championship Logo" width="100" height="100">
-
+<img src="Images/anz_logo_transparent.png" alt="ANZ Netball Championship Logo" width="100" height="100">
+<button type = "button" id = "2008">2008 Results</button>
+<button type = "button" id = "2009">2009 Results</button>
+<button type = "button" id = "2010">2010 Results</button>
+<button type = "button" id = "2011">2011 Results</button>
+<button type = "button" id = "2012">2012 Results</button>
+<button type = "button" id = "2008">2013 Results</button>
+<button type="button" onclick="linkToBar()" id = "history">Bar Charts</button>
 </div>
-<footer><button type="button" onclick="linkToBar()" id = "history">Bar Charts</button></footer>
-
 </body>
 
 <script src="jquery-csv.js"></script>
