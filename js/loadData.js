@@ -196,6 +196,15 @@ function onDataLoaded(error){
 	var currentYear = "2008";
 	//console.log(filesRead);
 
+	//make a total object
+	var totalWins = {};
+	 for(var key in teamWins){
+	 		totalWins[key] = [0,0,0,0,0];
+	 }	 
+
+	 yearToWins["all"] = totalWins;
+
+
 	//create a object from string file/year to data
 	for(var i = 1; i<=filesRead;i++){
 		allData[currentYear] = arguments[i];
@@ -214,6 +223,7 @@ function onDataLoaded(error){
 	 	yearInt++;
 		currentYear = yearInt.toString();
 	 }
+	 
 
 	 
 	 console.log(arguments);
@@ -254,25 +264,39 @@ function calculateTableWins(year,table){
 				
 				yearToWins[year][teamWon][0]++;
 				yearToWins[year][teamWon][4]++;//increment total wins
+				yearToWins["all"][teamWon][0]++;
+				yearToWins["all"][teamWon][4]++;
 				//teamWins[teamWon][0]++;
 			}else{
 				teamWon = table[i]["Away Team"];
 				teamLost = table[i]["Home Team"];
 				yearToWins[year][teamWon][1]++;
 				yearToWins[year][teamWon][4]++;
+				yearToWins["all"][teamWon][1]++;
+				yearToWins["all"][teamWon][4]++;
 			}
 			//console.log(scoreArray);
 
 			var result = checkSameCountry(teamWon,teamLost);
 			if(result==true){
 				yearToWins[year][teamWon][2]++;
+				yearToWins["all"][teamWon][2]++;
 			}else{
 				yearToWins[year][teamWon][3]++;
+				yearToWins["all"][teamWon][3]++;
 			}
 		}
 	}//end for
 
 
+
+
+}
+
+//totals up all the data from all the tables
+function calculateAll(){
+	//everything has loaded, now to make a all data entry
+	 
 
 }
 

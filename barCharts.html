@@ -37,6 +37,9 @@ body {
   display: none;
 }
 
+
+
+
 </style>
 <body>
 <svg id="body" width="950" height="500"></svg>
@@ -234,6 +237,7 @@ transition.select(".x.axis")
         .call(xAxis)
          .selectAll("text")  
             .style("text-anchor", "end")
+            //.style("stroke", "blue")
             .attr("transform", "rotate(-45)");//apply the same transformations as the text
 
 
@@ -401,6 +405,7 @@ update();
  //  transition.selectAll(".team").style("opacity", 0);
 
   selectedYear = document.getElementById("yearSelect").value;
+  console.log(selectedYear);
   drawBarChart();
   update();
  // // var transition = svg.transition().duration(750);
@@ -417,7 +422,7 @@ function initDropMenu(){
   for(var key in allData){//for each should loop in order of keys added when data is loaded
     yearArray.push(key);
   }
-  yearArray.push("All");
+  yearArray.push("all");
   var html = '<select id = "yearSelect">', yearArray , i;
 
 
@@ -474,7 +479,7 @@ function updateYear(){
 
 
 <form>
-  Country Filtering/Highlighting: (SoonTM)
+  Country Filtering/Highlighting/Regular/PlayOff: (SoonTM)
     <div>
 
     </div>
