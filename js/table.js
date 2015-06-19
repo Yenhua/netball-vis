@@ -1,14 +1,15 @@
 'use strict';
 //Store the table rows - Team Name, Home Wins, Away Wins, Wins Against same Country, Wins against different country.
 var teams = [];
-
+var table;
 
 
 //Grab the data from the loaddata script and fill the teams array
-function populateTeams(){
-var rawInputData = teamWins; //Get the data from loadData - may need to testing to make sure data always gets loaded before it is put into this variable.
+function populateTeams(inputData){
+var rawInputData = inputData; //Get the data from loadData - may need to testing to make sure data always gets loaded before it is put into this variable.
 var keys = []; //Array of keys, in this case team names
 var values = []; //Array of mapped values. these are in array format, mapped index i = keys[i] in an associative context.
+teams = []; //Make sure the teams array is clear every time this is called again.
 for(var key in rawInputData){
 if(rawInputData.hasOwnProperty(key)){
   keys.push(key);//Push to array of keys.
@@ -23,8 +24,21 @@ for(var i = 0; i < keys.length; i++){
 
 }
 console.log(teams[1]);
+d3.select('body').selectAll('table').remove();
 drawTable();
 };
+
+
+function welcomeText(){
+//Will spawn the welcome text on the page
+//Looks quite good if an SVG canvas of 200x200 is appended to the body.
+//goes just above the graph. Could put a title/team logos there
+}
+
+
+
+
+
 
 
 //Draws the table after the data has been filled
@@ -37,12 +51,16 @@ var columns = [ //Set up all the column formatting and naming
   {head: 'Different Country Wins', cl: 'num', html: ƒ('different') }
 ];
 
+//Make sure the 'body' of the html page is clear before appending something to it
+
+
 //Start drawing the table
-var table = d3.select('body')
+table = d3.select('body')
 .append('table');
 
 //Create Header of table
-table.append('thead')
+table
+.append('thead')
 .append('tr')
 .selectAll('th')
 .data(columns)
@@ -71,15 +89,4 @@ d3.keys(c).forEach(function(k) {
 .append('td')
 .html(ƒ('html'))
 .attr('class', ƒ('cl'));
-
-
-
-
-
-
-
-
-
-
-
 };

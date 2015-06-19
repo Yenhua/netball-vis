@@ -131,7 +131,7 @@ function drawBarChart(){
             // .attr("dy", "2em")
             .attr("transform", "rotate(-45)");//rotate a negative degrees so the text won't go above the axis
             // .attr("transform", function(d) {
-            //     return "rotate(20)" 
+            //     return "rotate(20)"
             //     });
       // .append("text")
       // .attr("text-anchor", "end")
@@ -202,7 +202,7 @@ function update(){
 
   //first update the current year
  selectedYear = document.getElementById("yearSelect").value;
-  
+
 
 
 // console.log("old data:")
@@ -228,7 +228,7 @@ function update(){
   y.domain([0, d3.max(data, function(d) { return d3.max(d.legends, function(d) { return d.value; }); })]);
 
 
-  
+
  var transition = svg.transition().duration(750);
 
 
@@ -238,7 +238,7 @@ function update(){
 
 transition.select(".x.axis")
         .call(xAxis)
-         .selectAll("text")  
+         .selectAll("text")
             .style("text-anchor", "end")
             //.style("stroke", "blue")
             .attr("transform", "rotate(-45)");//apply the same transformations as the text
@@ -263,12 +263,12 @@ if(highlight==true){
       .attr("class","high");
     }
     }
-    
 
-    
 
-    
-  });   
+
+
+
+  });
 
 
 }else{
@@ -365,7 +365,7 @@ function updateData(){
       newColorArray[4] = "transparent";
     }
     tempData.push(tempEntry);
-    
+
   }//end for
   color = d3.scale.ordinal()
     .range(newColorArray);
@@ -393,7 +393,7 @@ function sortData(unsorted){
       return b["Total Wins"] - a["Total Wins"];
     });
 
-    
+
   }
   else if(document.getElementById("sortHome").checked){
     sorted = unsorted.sort(function(a,b){
@@ -416,7 +416,7 @@ function sortData(unsorted){
       return b["Different Country Wins"] - a["Different Country Wins"];
     });
   }
-  
+
    //console.log(sorted);
 
 return sorted;
@@ -434,7 +434,7 @@ document.getElementById("checkDiff").checked = "checked";
 update();
 
     var temp = svg.selectAll("g").remove();
-    
+
 
 
  //  var transition = svg.transition().duration(750);
@@ -501,8 +501,8 @@ else{
 
 
 <form>
-   
-    
+
+
 
   Legend Filtering:
     <div>
@@ -512,7 +512,7 @@ else{
         <label><input type="checkbox" checked="checked" id="checkSame"/> Same Country Wins</label>
         <label><input type="checkbox" checked="checked" id="checkDiff"/> Different Country Wins</label>
         <button type="button" onclick="update();" id = "u1">Update Filters and apply sorting</button>
-        
+
     </div>
     Sorting:
     <div>

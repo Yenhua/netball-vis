@@ -9,13 +9,13 @@ function loadTable(arg){
         tableData=data;
         console.log("tableData[0][Score] = " + tableData[0]["Score"]);
         calculateHomeAdvantageTeam();
-        
+
         if(arg=="bar"){
         	graphData = tableData;
         	drawBarChart();//this can be defined anywhere as long as the html page knows it exists
         }
         else if(arg=="table"){
-        populateTeams(); //This fills the arrays in the table script
+        getData(); //This fills the arrays in the controlTable script
         }
 
   });
@@ -157,7 +157,7 @@ function loadAll(arg){
 	var currentCount = 0;
 	var q = queue();
 	loadArg = arg;
-	
+
 	while(currentCount<numFiles){//load until we get a error...aka file not found
 		try{
 			q = q.defer(d3.csv, filename);//append defers for every file
@@ -167,7 +167,7 @@ function loadAll(arg){
 		catch(err){//should not happen now we know how many files are there...
 			console.log("error, loading more files than found");
 			break;
-			
+
 		}
 		var yearInt = parseInt(yearIndex);
 		yearInt++;
@@ -179,7 +179,7 @@ function loadAll(arg){
 		else{
 			filename = "data/200" + yearIndex + "-Table1.csv"
 		}
-		
+
 	}
 	console.log(currentCount);
 
@@ -200,7 +200,7 @@ function onDataLoaded(error){
 	var totalWins = {};
 	 for(var key in teamWins){
 	 		totalWins[key] = [0,0,0,0,0];
-	 }	 
+	 }
 
 	 yearToWins["all"] = totalWins;
 
@@ -209,7 +209,7 @@ function onDataLoaded(error){
 	for(var i = 1; i<=filesRead;i++){
 		allData[currentYear] = arguments[i];
 		var yearInt = parseInt(currentYear);
-		
+
 
 		var tempWins = {};//team to number of wins for a particular year
 		 //now we want year to teamWins objects
@@ -223,15 +223,19 @@ function onDataLoaded(error){
 	 	yearInt++;
 		currentYear = yearInt.toString();
 	 }
-	 
 
-	 
+
+
 	 console.log(arguments);
 	 if(loadArg=="bar"){
         	console.log(loadArg);
         	initDropMenu();
         	drawBarChart();
 
+      }
+   else if(loadArg == "table"){
+        console.log("Table is starting to execute");
+        getData(); //Triggers the function for the table to grab the data from this script
       }
 }
 
@@ -261,7 +265,7 @@ function calculateTableWins(year,table){
 				//home team won
 				teamWon = table[i]["Home Team"];
 				teamLost = table[i]["Away Team"];
-				
+
 				yearToWins[year][teamWon][0]++;
 				yearToWins[year][teamWon][4]++;//increment total wins
 				yearToWins["all"][teamWon][0]++;
@@ -296,7 +300,7 @@ function calculateTableWins(year,table){
 //totals up all the data from all the tables
 function calculateAll(){
 	//everything has loaded, now to make a all data entry
-	 
+
 
 }
 
@@ -315,7 +319,7 @@ function countFiles(){
 		}
 		catch(err){
 			break;
-			
+
 		}
 		var yearInt = parseInt(year);
 		yearInt++;
