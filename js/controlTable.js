@@ -27,3 +27,9 @@ function accountForFuture(){
   //IF the number is higher than 6 (2008-2013 which we will always have)
   //Add number-6 extra buttons, and call them by the year which they represent (2013 + number-6+i), where i = number- 6 + how many buttons have been added
 }
+
+
+//This function is planned to sort the data of a specific year into order by wins before it gets printed in the table.
+function sortData(){
+
+}
