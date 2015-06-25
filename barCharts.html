@@ -82,6 +82,8 @@ var selectedYear = "2008";
 
 var highlight = false;
 
+var showPlayoff = true;//default displays ALL data
+
  //this must be called from the d3.csv block in loadData.js
 function drawBarChart(){
 
@@ -90,7 +92,13 @@ function drawBarChart(){
   //console.log(typeof(graphData));
   var tempData = [];
 
-  var curTeamWins = yearToWins[selectedYear];
+  var curTeamWins;
+
+  if(showPlayoff == true){
+    curTeamWins = yearToWins[selectedYear];
+  }else{
+    curTeamWins = groupYearToWins[selectedYear];
+  }
 
   for(var key in teamWins){
 
@@ -314,8 +322,14 @@ function updateData(){
   var newColorArray = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"];
   var tempData = [];
 
-
-  var curTeamWins = yearToWins[selectedYear];
+  //modify this depending if playoff data is included or not
+  var curTeamWins;
+  if(showPlayoff == true){
+    curTeamWins = yearToWins[selectedYear];
+  }else{
+    curTeamWins = groupYearToWins[selectedYear];
+  }
+  
 
 
   for(var key in curTeamWins){
@@ -437,17 +451,12 @@ update();
 
 
 
- //  var transition = svg.transition().duration(750);
- //  transition.selectAll(".team").style("opacity", 0);
 
   selectedYear = document.getElementById("yearSelect").value;
   console.log(selectedYear);
   drawBarChart();
   update();
- // // var transition = svg.transition().duration(750);
- // //  transition.selectAll(".team")
- // //        .style("opacity", 0);
- // transition.selectAll(".team").style("opacity", 1);
+
 }
 
 
@@ -489,6 +498,48 @@ else{
     highlight = false;
   }
 
+  update();
+}
+
+function togglePlayoff(){
+
+
+  var oldOption;
+
+if(showPlayoff==true){
+  oldOption = true;
+}
+else{
+  oldOption = false;
+}
+
+
+  if(oldOption==false){
+    showPlayoff = true;
+     //update the inner html...
+  var htmlString = document.getElementById("group").innerHTML;
+  htmlString = htmlString.replace("excluded","included");
+  
+
+  document.getElementById("group").innerHTML = htmlString;
+  }
+  else{
+    showPlayoff = false;
+     var htmlString = document.getElementById("group").innerHTML;
+     htmlString = htmlString.replace("included","excluded");
+
+  document.getElementById("group").innerHTML = htmlString;
+  }
+
+
+  var temp = svg.selectAll("g").remove();
+
+
+
+
+  selectedYear = document.getElementById("yearSelect").value;
+  console.log(selectedYear);
+  drawBarChart();
   update();
 }
 
@@ -535,6 +586,12 @@ else{
   Toggle Highlight  <span style="color:blue;font-weight:bold">New Zealand</span> and <span style="color:green;font-weight:bold">Australian</span> Teams
     <div>
       <button type="button" onclick="hl();" id = "highlight">Highlight</button>
+    </div>
+</form>
+<form id= "group">
+   Toggle show/hide playoff data. Currently: playoffs included
+    <div>
+      <button type="button" onclick="togglePlayoff();" id = "showPlayoff">Toggle</button>
     </div>
 </form>
 
