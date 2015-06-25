@@ -148,6 +148,12 @@ var filename = "data/200" + yearIndex + "-Table1.csv"
 var errorOutput;
 var totalFilesRead = 0;
 var loadArg;
+
+//this is similar to yearToWins but only for group data
+var groupYearToWins = [];
+
+
+
 /*The following functions are for loading multiple unknown amounts of csv files
 The aim is to allow future data to be added easily
 */
@@ -198,12 +204,14 @@ function onDataLoaded(error){
 
 	//make a total object
 	var totalWins = {};
+	var groupTotalWins = {};
 	 for(var key in teamWins){
 	 		totalWins[key] = [0,0,0,0,0];
+	 		groupTotalWins[key] = [0,0,0,0,0];
 	 }
 
 	 yearToWins["all"] = totalWins;
-
+	 groupYearToWins["all"] = groupTotalWins;
 
 	//create a object from string file/year to data
 	for(var i = 1; i<=filesRead;i++){
@@ -213,10 +221,14 @@ function onDataLoaded(error){
 
 		var tempWins = {};//team to number of wins for a particular year
 		 //now we want year to teamWins objects
+
+		var groupTempWins = {};
 	 	for(var key in teamWins){
 	 		tempWins[key] = [0,0,0,0,0];
+	 		groupTempWins[key] = [0,0,0,0,0];
 	 	}
 	 	yearToWins[currentYear] = tempWins;
+	 	groupYearToWins[currentYear] = groupTempWins;
 
 	 	calculateTableWins(currentYear,allData[currentYear]);
 
@@ -270,14 +282,18 @@ function calculateTableWins(year,table){
 				yearToWins[year][teamWon][4]++;//increment total wins
 				yearToWins["all"][teamWon][0]++;
 				yearToWins["all"][teamWon][4]++;
+
+				groupYearToWins["all"][teamWon][0]++;
+				groupYearToWins["all"][teamWon][4]++;
 				//teamWins[teamWon][0]++;
 			}else{
 				teamWon = table[i]["Away Team"];
 				teamLost = table[i]["Home Team"];
 				yearToWins[year][teamWon][1]++;
 				yearToWins[year][teamWon][4]++;
-				yearToWins["all"][teamWon][1]++;
-				yearToWins["all"][teamWon][4]++;
+
+				groupYearToWins["all"][teamWon][1]++;
+				groupYearToWins["all"][teamWon][4]++;
 			}
 			//console.log(scoreArray);
 
