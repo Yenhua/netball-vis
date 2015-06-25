@@ -283,8 +283,13 @@ function calculateTableWins(year,table){
 				yearToWins["all"][teamWon][0]++;
 				yearToWins["all"][teamWon][4]++;
 
-				groupYearToWins["all"][teamWon][0]++;
-				groupYearToWins["all"][teamWon][4]++;
+				if(i<table.length-4){//we only want the group data,not the playoffs
+					groupYearToWins[year][teamWon][0]++;
+					groupYearToWins[year][teamWon][4]++;
+					groupYearToWins["all"][teamWon][0]++;
+					groupYearToWins["all"][teamWon][4]++;
+				}
+				
 				//teamWins[teamWon][0]++;
 			}else{
 				teamWon = table[i]["Away Team"];
@@ -292,8 +297,13 @@ function calculateTableWins(year,table){
 				yearToWins[year][teamWon][1]++;
 				yearToWins[year][teamWon][4]++;
 
-				groupYearToWins["all"][teamWon][1]++;
-				groupYearToWins["all"][teamWon][4]++;
+				if(i<table.length-4){
+					groupYearToWins[year][teamWon][1]++;
+					groupYearToWins[year][teamWon][4]++;
+					groupYearToWins["all"][teamWon][1]++;
+					groupYearToWins["all"][teamWon][4]++;
+				}
+				
 			}
 			//console.log(scoreArray);
 
@@ -301,9 +311,20 @@ function calculateTableWins(year,table){
 			if(result==true){
 				yearToWins[year][teamWon][2]++;
 				yearToWins["all"][teamWon][2]++;
+
+				if(i<table.length-4){
+					groupYearToWins[year][teamWon][2]++;
+					groupYearToWins["all"][teamWon][2]++;
+				}
+				
 			}else{
 				yearToWins[year][teamWon][3]++;
 				yearToWins["all"][teamWon][3]++;
+				if(i<table.length-4){
+					groupYearToWins[year][teamWon][3]++;
+					groupYearToWins["all"][teamWon][3]++;
+				}
+				
 			}
 		}
 	}//end for
