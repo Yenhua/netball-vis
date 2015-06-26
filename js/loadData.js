@@ -26,18 +26,18 @@ function loadTable(arg){
 //may need to define enums for these teams for easier sorting in terms of code
 //may need to create an additional one for stadiums
 var teamWins = {//AUS teams
-				//"name":[home wins,away wins,win against same country, win against different country]
-				"Adelaide Thunderbirds":[0,0,0,0,0],
-				"Queensland Firebirds":[0,0,0,0,0],
-				"New South Wales Swifts":[0,0,0,0,0],
-				"Melbourne Vixens":[0,0,0,0,0],
-				"West Coast Fever":[0,0,0,0,0],
+				//"name":[home wins,away wins,win against same country, win against different country,total wins, final placing, goals scored, goals conceded]
+				"Adelaide Thunderbirds":[0,0,0,0,0,0,0,0],
+				"Queensland Firebirds":[0,0,0,0,0,0,0,0],
+				"New South Wales Swifts":[0,0,0,0,0,0,0,0],
+				"Melbourne Vixens":[0,0,0,0,0,0,0,0],
+				"West Coast Fever":[0,0,0,0,0,0,0,0],
 				//NZ teams
-				"Northern Mystics":[0,0,0,0,0],
-				"Waikato Bay of Plenty Magic":[0,0,0,0,0],
-				"Central Pulse":[0,0,0,0,0],
-				"Canterbury Tactix":[0,0,0,0,0],
-				"Southern Steel":[0,0,0,0,0]}
+				"Northern Mystics":[0,0,0,0,0,0,0,0],
+				"Waikato Bay of Plenty Magic":[0,0,0,0,0,0,0,0],
+				"Central Pulse":[0,0,0,0,0,0],
+				"Canterbury Tactix":[0,0,0,0,0,0,0,0],
+				"Southern Steel":[0,0,0,0,0,0,0,0]}
 
 var teamID = {//AUS teams
 				"Adelaide Thunderbirds":"AUS1",
@@ -206,8 +206,8 @@ function onDataLoaded(error){
 	var totalWins = {};
 	var groupTotalWins = {};
 	 for(var key in teamWins){
-	 		totalWins[key] = [0,0,0,0,0];
-	 		groupTotalWins[key] = [0,0,0,0,0];
+	 		totalWins[key] = [0,0,0,0,0,0,0,0];
+	 		groupTotalWins[key] = [0,0,0,0,0,0,0,0];
 	 }
 
 	 yearToWins["all"] = totalWins;
@@ -224,8 +224,8 @@ function onDataLoaded(error){
 
 		var groupTempWins = {};
 	 	for(var key in teamWins){
-	 		tempWins[key] = [0,0,0,0,0];
-	 		groupTempWins[key] = [0,0,0,0,0];
+	 		tempWins[key] = [0,0,0,0,0,0,0,0];
+	 		groupTempWins[key] = [0,0,0,0,0,0,0,0];
 	 	}
 	 	yearToWins[currentYear] = tempWins;
 	 	groupYearToWins[currentYear] = groupTempWins;
@@ -266,10 +266,14 @@ function calculateTableWins(year,table){
 			}
 			//console.log(scoreArray);
 
+			if(scoreArray[0].indexOf("draw") > -1){
+				continue;//skip this game, this is the only draw game that exists in our data
+			}
+
 
 			var homeScore = parseInt(scoreArray[0]);
 			var awayScore = parseInt(scoreArray[1]);
-
+			
 
 			var teamWon;
 			var teamLost;
@@ -288,25 +292,36 @@ function calculateTableWins(year,table){
 					groupYearToWins[year][teamWon][4]++;
 					groupYearToWins["all"][teamWon][0]++;
 					groupYearToWins["all"][teamWon][4]++;
+
+					groupYearToWins[year][teamWon][6] = groupYearToWins[year][teamWon][6] + homeScore;//index 6 - goal scored, index 7 - goals conceded
+					groupYearToWins[year][teamWon][7] = groupYearToWins[year][teamWon][7] + awayScore;
+
+					groupYearToWins[year][teamLost][6] = groupYearToWins[year][teamLost][6] + awayScore;//index 6 - goal scored, index 7 - goals conceded
+					groupYearToWins[year][teamLost][7] = groupYearToWins[year][teamLost][7] + homeScore;
 				}
-				
 				//teamWins[teamWon][0]++;
 			}else{
 				teamWon = table[i]["Away Team"];
 				teamLost = table[i]["Home Team"];
-				yearToWins[year][teamWon][1]++;
+				yearToWins[year][teamWon][1]++;//increment away
 				yearToWins[year][teamWon][4]++;
+				yearToWins["all"][teamWon][1]++;//increment total
+				yearToWins["all"][teamWon][4]++;
 
 				if(i<table.length-4){
 					groupYearToWins[year][teamWon][1]++;
 					groupYearToWins[year][teamWon][4]++;
 					groupYearToWins["all"][teamWon][1]++;
 					groupYearToWins["all"][teamWon][4]++;
-				}
-				
-			}
-			//console.log(scoreArray);
 
+					groupYearToWins[year][teamWon][6] = groupYearToWins[year][teamWon][6] + awayScore;//index 6 - goal scored, index 7 - goals conceded
+					groupYearToWins[year][teamWon][7] = groupYearToWins[year][teamWon][7] + homeScore;
+
+					groupYearToWins[year][teamLost][6] = groupYearToWins[year][teamLost][6] + homeScore;//index 6 - goal scored, index 7 - goals conceded
+					groupYearToWins[year][teamLost][7] = groupYearToWins[year][teamLost][7] + awayScore;
+
+				}
+			}//end else
 			var result = checkSameCountry(teamWon,teamLost);
 			if(result==true){
 				yearToWins[year][teamWon][2]++;
@@ -326,10 +341,112 @@ function calculateTableWins(year,table){
 				}
 				
 			}
+
+
 		}
 	}//end for
 
+	//placing calculating, start at grand finals and work backwards
 
+	for(var i = table.length-1;i>table.length-5;i--){
+
+		//we can not have a bye for the last 4 games (playoffs)
+		var stringScore = table[i]["Score"];
+			scoreArray = stringScore.split('-');
+			if(scoreArray.length!=2){
+				scoreArray = stringScore.split('–');//difference between hypens, the second one is &#8211
+			}
+			//console.log(scoreArray);
+
+
+			var homeScore = parseInt(scoreArray[0]);
+			var awayScore = parseInt(scoreArray[1]);
+
+
+			var teamWon;
+			var teamLost;
+
+
+			if(i==table.length-1){//grand finals
+				if(homeScore>awayScore){//home team won
+					groupYearToWins[year][table[i]["Home Team"]][5] = 1;//first place
+					groupYearToWins[year][table[i]["Away Team"]][5] = 2;
+				}
+				else{//away team won
+					groupYearToWins[year][table[i]["Home Team"]][5] = 2;
+					groupYearToWins[year][table[i]["Away Team"]][5] = 1;
+				}
+			}
+			else if(i==table.length-2){//loser bracket finals, loser of this becomes 3rd place
+				if(homeScore>awayScore){
+					groupYearToWins[year][table[i]["Away Team"]][5] = 3;//away team lost
+				}
+				else{//away team won
+					groupYearToWins[year][table[i]["Home Team"]][5] = 3;//home team lost
+				}
+			}
+			else{//here it gets tricky, this game may either be major or minor semifinal, if no teams are eliminated here
+					//then the loser of this game may not be 4th place
+				var homePlacing = groupYearToWins[year][table[i]["Home Team"]][5];
+				var awayPlacing = groupYearToWins[year][table[i]["Away Team"]][5];
+
+				if(homePlacing!=0 && awayPlacing!=0){
+					//both teams has a placing already, neither can bet be 4th
+				}else{
+					if(homePlacing==0){//we can already deduce this team must have came 4th if it has no placing assigned to it
+						groupYearToWins[year][table[i]["Home Team"]][5] = 4;
+					}else{
+						groupYearToWins[year][table[i]["Away Team"]][5] = 4;
+					}
+				}
+
+			}
+			
+	}//end for
+
+	//playoff placing has been decided, now to determine everyone else
+	var currentPlacing = 5;
+	var currentBestWins = -1;
+	var currentBestTeam = "";
+	var currentBestGoalPercent = -1;
+
+	var curTeamWins = groupYearToWins[year];
+	while(currentPlacing<11){
+
+			for(var key in curTeamWins){
+				if(curTeamWins[key][5]!=0){
+					//already has a placing, don't consider them
+				}
+				else{
+					var curTeamGroupWins = parseInt(curTeamWins[key][4]);
+					if(curTeamGroupWins>currentBestWins){
+						currentBestWins = curTeamGroupWins;
+						currentBestTeam = key;
+						currentBestGoalPercent = parseFloat(curTeamWins[key][6]/curTeamWins[key][7]);
+					}if(curTeamGroupWins==currentBestWins){
+						//same wins, we will have to use goal percentage to break the tie
+						var currentGoalPercent = parseFloat(curTeamWins[key][6]/curTeamWins[key][7]);
+						if(currentGoalPercent>currentBestGoalPercent){
+							//don't need to update best wins, it's the same
+							currentBestTeam = key;
+							currentBestGoalPercent = currentGoalPercent;
+						}
+					}
+
+				}
+		}
+
+
+		groupYearToWins[year][currentBestTeam][5] = currentPlacing;
+
+		currentPlacing++;//now find the next best team
+		//reset our initial variables
+		currentBestWins = -1;
+		currentBestTeam = "";
+		currentBestGoalPercent = -1;
+	}
+
+	
 
 
 }
