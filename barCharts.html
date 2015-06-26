@@ -502,6 +502,12 @@ else{
 }
 
 function togglePlayoff(){
+  document.getElementById("checkTotal").checked = "checked";
+document.getElementById("checkHome").checked = "checked";
+document.getElementById("checkAway").checked = "checked";
+document.getElementById("checkSame").checked = "checked";
+document.getElementById("checkDiff").checked = "checked";
+update();
 
 
   var oldOption;
@@ -589,7 +595,7 @@ else{
     </div>
 </form>
 <form id= "group">
-   Toggle show/hide playoff data. Currently: playoffs included
+   Toggle show/hide playoff data (will reenable all filters). Currently: <span style="font-weight:bold">playoffs included</span>
     <div>
       <button type="button" onclick="togglePlayoff();" id = "showPlayoff">Toggle</button>
     </div>
