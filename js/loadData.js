@@ -247,6 +247,7 @@ function onDataLoaded(error){
       }
    else if(loadArg == "table"){
         console.log("Table is starting to execute");
+        initButtons();
         getData(); //Triggers the function for the table to grab the data from this script
       }
 }

@@ -12,8 +12,8 @@ function getData(){
 
 function splitData(arg){
 
-console.log(data[2011]);
-var year = arg; //This is the year, corresponding to the button that was clicked on.
+// console.log(data[2011]);
+var year = parseInt(arg); //This is the year, corresponding to the button that was clicked on.
 populateTeams(data[arg]);//Call the function in the table script to start the process of drawing the table.
 }
 
