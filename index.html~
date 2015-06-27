@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>DataLoadTest</title>
+<title>ANZ Netball Championships</title>
 <meta charset="utf-8">
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>
@@ -10,9 +10,9 @@
 <script src="js/controlTable.js"></script>
 
 <style type="text/css">
-body { font-family: 'Helvetica Neue', Helvetica; font-weight:300; padding:20px; background-color: #4398A8;}
-th { text-align: left; font-weight: 900;}
-td { color: #014956; font-weight: bold;}
+body { font-family: 'Helvetica Neue', Helvetica; font-weight:300; padding:20px; background-color: #4F96B2;}
+th { text-align: left; font-weight: 900; color:#E0811A;}
+td { color: #FFB86B; font-weight: bold;}
 th, td { padding: 0 1em 0.5ex 0;}
 th.center, td.center{ text-align: center;}
 th.num, td.num { text-align: right; }
@@ -20,7 +20,7 @@ table{display: flex; align-items: center; justify-content: center;}
 footer{position:absolute; bottom: 0; justify-content: center; background:#000000;}
 .topLogo{width:10px; height:10px;}
 button{text-align: center; width: 85px; margin-left:9px;margin-top:5px;}
-.welcomeText{margin-left:115px; margin-top: 20px; justify-content: center;}
+.welcomeText{margin-left:115px; margin-top: 20px; text-align: center;}
 </style>
 
 </head>
@@ -35,8 +35,32 @@ button{text-align: center; width: 85px; margin-left:9px;margin-top:5px;}
 
 </div>
 
-<div class="welcomeText">
-	AAAAAAAAAAAAAA
+<div class="welcomeText" id = "welcome">
+	<h1>Welcome to ANZ Netball</h1>
+
+This is a website that contains various statistics on the ten teams that participated in the ANZ netball championships. The following information is included:
+<p>
+Total wins: This is the total number of wins a team has obtained in a season.
+<p>
+Home wins: Each team has its own home court, when they win on their home court, that is considered a Home win.
+</p>
+<p>
+Away wins: Any win that is not in a team’s home court will be considered a away win.
+</p>
+<p>
+Same Country wins: Any win against a team from the same country will be considered as a same country win. Such as a New Zealand team winning against another New Zealand team.
+</p>
+<p>
+Different Country wins: Any win against a team from a different country will count as a different country team, such as a New Zealand team beating an Australian Team
+</p>
+<p>
+Placing: This is the final placing in the tournament. Note, if a team has equal wins, the placing is decided by goal percentage. Goal percentage is the total number of goals score divided by total number of goals conceded. 
+</p>
+<p>
+The table contains information from both the regular season and playoff season. The bar chart allows filtering of regular and playoff data, however only the top four teams would be affected.
+
+The bar graph also has many interesting interactions, go check it out!
+</p>
 </div>
 
 </body>
