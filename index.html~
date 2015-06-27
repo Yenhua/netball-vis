@@ -20,9 +20,11 @@ table{display: flex; align-items: center; justify-content: center;}
 footer{position:absolute; bottom: 0; justify-content: center; background:#000000;}
 .topLogo{width:10px; height:10px;}
 button{text-align: center; width: 85px; margin-left:9px;margin-top:5px;}
+.welcomeText{margin-left:115px; margin-top: 20px; justify-content: center;}
 </style>
 
 </head>
+
 <body onload="loadAll('table')">
 <!-- <svg width="640" height="360">
 <rect x="0" y="0" width="640" height="360" fill="green" />
@@ -32,6 +34,11 @@ button{text-align: center; width: 85px; margin-left:9px;margin-top:5px;}
 <button type="button" onclick="linkToBar()" id = "history">Bar Charts</button>
 
 </div>
+
+<div class="welcomeText">
+	AAAAAAAAAAAAAA
+</div>
+
 </body>
 
 
