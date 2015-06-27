@@ -305,6 +305,12 @@ transition.selectAll("g.g")//each group is contained in a g element
 
 }
 
+  var showTotal;
+  var showHome;
+  var showAway;
+  var showSame;
+  var showDiff;
+
 function updateData(){
 
 
@@ -312,11 +318,11 @@ function updateData(){
     svg.selectAll(".high").remove();
   }
 
-  var showTotal = document.getElementById("checkTotal").checked;
-  var showHome = document.getElementById("checkHome").checked;
-  var showAway = document.getElementById("checkAway").checked;
-  var showSame = document.getElementById("checkSame").checked;
-  var showDiff = document.getElementById("checkDiff").checked;
+  showTotal = document.getElementById("checkTotal").checked;
+  showHome = document.getElementById("checkHome").checked;
+  showAway = document.getElementById("checkAway").checked;
+  showSame = document.getElementById("checkSame").checked;
+  showDiff = document.getElementById("checkDiff").checked;
 
 
   var newColorArray = ["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"];
@@ -403,6 +409,11 @@ function sortData(unsorted){
   }
 
   if(document.getElementById("sortTotal").checked){
+
+    if(showTotal==false){
+      alert("Attempting to sort by total wins but total wins have been filtered out. No sorting will be supplied.");
+      return unsorted;
+    }
      sorted = unsorted.sort(function(a,b){
       return b["Total Wins"] - a["Total Wins"];
     });
@@ -410,22 +421,46 @@ function sortData(unsorted){
 
   }
   else if(document.getElementById("sortHome").checked){
+
+    if(showHome==false){
+      alert("Attempting to sort by home wins but home wins have been filtered out. No sorting will be supplied.");
+      return unsorted;
+    }
+
     sorted = unsorted.sort(function(a,b){
 
       return b["Home Wins"] - a["Home Wins"];
     });
   }
   else if(document.getElementById("sortAway").checked){
+
+    if(showAway==false){
+      alert("Attempting to sort by away wins but away wins have been filtered out. No sorting will be supplied.");
+      return unsorted;
+    }
+
     sorted = unsorted.sort(function(a,b){
       return b["Away Wins"] - a["Away Wins"];
     });
   }
   else if(document.getElementById("SortSame").checked){
+
+    if(showSame==false){
+      alert("Attempting to sort by same country wins but same country wins have been filtered out. No sorting will be supplied.");
+      return unsorted;
+    }
+
     sorted = unsorted.sort(function(a,b){
       return b["Same Country Wins"] - a["Same Country Wins"];
     });
   }
   else if(document.getElementById("SortDiff").checked){
+
+    if(showDiff==false){
+      alert("Attempting to sort by different country wins but different country wins have been filtered out. No sorting will be supplied.");
+      return unsorted;
+    }
+
     sorted = unsorted.sort(function(a,b){
       return b["Different Country Wins"] - a["Different Country Wins"];
     });
