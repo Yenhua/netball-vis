@@ -4,8 +4,11 @@
 <meta charset="utf-8">
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>
+<script src="http://d3js.org/queue.v1.min.js"></script>
 <script src="js/loadData.js"></script>
 <script src="js/table.js"></script>
+<script src="js/controlTable.js"></script>
+
 <style type="text/css">
 body { font-family: 'Helvetica Neue', Helvetica; font-weight:300; padding:20px; background-color: #4398A8;}
 th { text-align: left; font-weight: 900;}
@@ -16,22 +19,22 @@ th.num, td.num { text-align: right; }
 table{display: flex; align-items: center; justify-content: center;}
 footer{position:absolute; bottom: 0; justify-content: center; background:#000000;}
 .topLogo{width:10px; height:10px;}
-button{text-align: center; width: 85px; margin-left:9px;}
+button{text-align: center; width: 85px; margin-left:9px;margin-top:5px;}
 </style>
 
 </head>
-<body onload="loadTable('table');">
+<body onload="loadAll('table'), welcomeText()">
 <!-- <svg width="640" height="360">
 <rect x="0" y="0" width="640" height="360" fill="green" />
 </svg> -->
 <div class="topLogo">
 <img src="Images/anz_logo_transparent.png" alt="ANZ Netball Championship Logo" width="100" height="100">
-<button type = "button" id = "2008">2008 Results</button>
-<button type = "button" id = "2009">2009 Results</button>
-<button type = "button" id = "2010">2010 Results</button>
-<button type = "button" id = "2011">2011 Results</button>
-<button type = "button" id = "2012">2012 Results</button>
-<button type = "button" id = "2008">2013 Results</button>
+<button type = "button" onclick = "splitData(2008)" id = "2008">2008 Results</button>
+<button type = "button" onclick = "splitData(2009)" id = "2009">2009 Results</button>
+<button type = "button" onclick = "splitData(2010)" id = "2010">2010 Results</button>
+<button type = "button" onclick = "splitData(2011)" id = "2011">2011 Results</button>
+<button type = "button" onclick = "splitData(2012)" id = "2012">2012 Results</button>
+<button type = "button" onclick = "splitData(2013)" id = "2013">2013 Results</button>
 <button type="button" onclick="linkToBar()" id = "history">Bar Charts</button>
 </div>
 </body>
@@ -40,6 +43,10 @@ button{text-align: center; width: 85px; margin-left:9px;}
 
 
 <script>
+//Create the welcome text for when the page first loads.
+
+
+
 
 function linkToBar(){
 

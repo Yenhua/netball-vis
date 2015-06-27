@@ -16,10 +16,10 @@ if(rawInputData.hasOwnProperty(key)){
   values.push(rawInputData[key]);//Push value to array of values
 }
 }
-
+console.log(values [0][4] + "Is the final placing");
 //Deal with splitting the new data we now have access to
 for(var i = 0; i < keys.length; i++){
-  var team = {name: keys[i], home: values[i][0], away: values[i][1], same: values[i][2], different: values[i][3]};
+  var team = {name: keys[i], home: values[i][0], away: values[i][1], same: values[i][2], different: values[i][3], placing: values[i][4]};
   teams.push(team);
 
 }
@@ -48,8 +48,8 @@ var columns = [ //Set up all the column formatting and naming
   {head: 'Home Wins', cl: 'num', html: ƒ('home') },
   {head: 'Away Wins', cl: 'num', html: ƒ('away') },
   {head: 'Same Country Wins', cl: 'num', html: ƒ('same') },
-  {head: 'Different Country Wins', cl: 'num', html: ƒ('different') }
-];
+  {head: 'Different Country Wins', cl: 'num', html: ƒ('different') },
+  {head: 'Final Placing', cl: 'num', html: ƒ('placing') }];
 
 //Make sure the 'body' of the html page is clear before appending something to it
 
