@@ -16,10 +16,9 @@ if(rawInputData.hasOwnProperty(key)){
   values.push(rawInputData[key]);//Push value to array of values
 }
 }
-console.log(values [0][4] + "Is the final placing");
 //Deal with splitting the new data we now have access to
 for(var i = 0; i < keys.length; i++){
-  var team = {name: keys[i], home: values[i][0], away: values[i][1], same: values[i][2], different: values[i][3], placing: values[i][4]};
+  var team = {name: keys[i], home: values[i][0], away: values[i][1], same: values[i][2], different: values[i][3], placing: values[i][5]};
   teams.push(team);
 
 }
