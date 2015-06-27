@@ -447,7 +447,9 @@ function calculateTableWins(year,table){
 		currentBestGoalPercent = -1;
 	}
 
-	
+	for(var key in curTeamWins){
+		yearToWins[year][key][5] = groupYearToWins[year][key][5]
+	}
 
 
 }
