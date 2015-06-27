@@ -7,7 +7,7 @@ function loadTable(arg){
 
   d3.csv("data/2012-Table1.csv", function(data) {
         tableData=data;
-        console.log("tableData[0][Score] = " + tableData[0]["Score"]);
+       // console.log("tableData[0][Score] = " + tableData[0]["Score"]);
         calculateHomeAdvantageTeam();
 
         if(arg=="bar"){
@@ -238,9 +238,9 @@ function onDataLoaded(error){
 
 
 
-	 console.log(arguments);
+	 //console.log(arguments);
 	 if(loadArg=="bar"){
-        	console.log(loadArg);
+        	//console.log(loadArg);
         	initDropMenu();
         	drawBarChart();
 
@@ -489,6 +489,6 @@ function countFiles(){
 			fname = "data/200" + year + "-Table1.csv"
 		}
 	}
-	console.log(count);
+	//console.log(count);
 	return count;
 }
