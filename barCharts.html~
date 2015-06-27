@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>BarChartsTest</title>
+<title>ANZ Netball Championships</title>
 <script src="http://d3js.org/d3.v3.min.js"
 charset="utf-8"></script>
 <script src="js/loadData.js"></script>
@@ -55,7 +55,7 @@ body {
 
 
 <script>
-var margin = {top: 20, right: 20, bottom: 140, left: 80},
+var margin = {top: 20, right: 20, bottom: 180, left: 80},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -67,7 +67,7 @@ var x1 = d3.scale.ordinal();
 var y = d3.scale.linear()
     .range([height, 0]);
 
-var colorArray = ["#FFDFBB", "#FFCA90", "#FFB86B", "#F4A250", "#a05d56", "#d0743c", "#ff8c00"];
+var colorArray = ["#FFDFBB", "#FFCA99", "#FFB86B", "#F4A248", "#a05d56", "#d0743c", "#ff8c00"];
 
 var color = d3.scale.ordinal()
     .range(colorArray);

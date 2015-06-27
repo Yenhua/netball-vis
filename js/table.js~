@@ -2,13 +2,13 @@
 //Store the table rows - Team Name, Home Wins, Away Wins, Wins Against same Country, Wins against different country.
 var teams = [];
 var table;
-var values = [];
+//var values = [];
 
 //Grab the data from the loaddata script and fill the teams array
 function populateTeams(inputData){
 var rawInputData = inputData; //Get the data from loadData - may need to testing to make sure data always gets loaded before it is put into this variable.
 var keys = []; //Array of keys, in this case team names
-//var values = []; //Array of mapped values. these are in array format, mapped index i = keys[i] in an associative context.
+var values = []; //Array of mapped values. these are in array format, mapped index i = keys[i] in an associative context.
 teams = []; //Make sure the teams array is clear every time this is called again.
 for(var key in rawInputData){
   console.log(key);

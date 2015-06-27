@@ -2,7 +2,7 @@
 //Store the table rows - Team Name, Home Wins, Away Wins, Wins Against same Country, Wins against different country.
 var teams = [];
 var table;
-//var values = [];
+//var values = []; -for debugging
 
 //Grab the data from the loaddata script and fill the teams array
 function populateTeams(inputData){
@@ -28,15 +28,6 @@ console.log(teams[1]);
 d3.select('body').selectAll('table').remove();
 drawTable();
 };
-
-
-function welcomeText(){
-//Will spawn the welcome text on the page
-//Looks quite good if an SVG canvas of 200x200 is appended to the body.
-//goes just above the graph. Could put a title/team logos there
-}
-
-
 
 
 

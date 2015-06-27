@@ -42,18 +42,4 @@ populateTeams(newDataSet);//Call the function in the table script to start the p
 }
 
 
-//Function to create buttons in index based on how many years of data are given to this script
-function accountForFuture(){
-  //Psuedo-Code
-  //Starting from '2008' iterate along until null is reached.
-  //Increment a count each time an iteration is done AND the current iteration is NOT null.
-  //Based on how high the count is, we know how many years of data we have
-  //IF the number is higher than 6 (2008-2013 which we will always have)
-  //Add number-6 extra buttons, and call them by the year which they represent (2013 + number-6+i), where i = number- 6 + how many buttons have been added
-}
 
-
-//This function is planned to sort the data of a specific year into order by wins before it gets printed in the table.
-function sortData(){
-
-}
