@@ -7,6 +7,7 @@ var data = [];//This contains raw wins data directly from loadData
 //It gets the wins data for each team every year, and stores it in this script.
 function getData(){
   data = yearToWins; //pulls yearToWins - is essentially a 3D array containing
+  console.log("data is loaded to controlTable");
 }
 
 
@@ -15,23 +16,24 @@ function splitData(arg){
 // console.log(data[2011]);
 var year = parseInt(arg); //This is the year, corresponding to the button that was clicked on.
 
-//Sort the data array by final placing before passing it to the table script
-var swapped;
-do{
-swapped = false;
-  for(int i =0; i<data.length; i++){
-   if(data[arg][i][5] > data[arg][i+1][5]){
-     var temp = data[arg][i];
-     data[arg][i] = data[arg][i+1];
-     data[arg][i+1] = temp;
-     swapped = true;
-    }
-  }
-}while(swapped);
+var newDataSet = [];
 
-//Data is sorted using bubblesort - 
 
-populateTeams(data[arg]);//Call the function in the table script to start the process of drawing the table.
+var currentPlacing = 1;
+while(currentPlacing!=11){
+for(var key in data[arg]){
+	if(data[arg][key][5] == currentPlacing){
+		newDataSet[key] = data[arg][key]
+		currentPlacing++;
+	}
+}
+
+}
+
+
+
+
+populateTeams(newDataSet);//Call the function in the table script to start the process of drawing the table.
 }
 
 
