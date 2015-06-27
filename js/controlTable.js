@@ -13,6 +13,11 @@ function getData(){
 
 function splitData(arg){
 
+//we can delete the intro text here
+//it is the second div in the document
+d3.selectAll("div:nth-child(2)").remove();
+
+
 // console.log(data[2011]);
 var year = parseInt(arg); //This is the year, corresponding to the button that was clicked on.
 
