@@ -37,10 +37,15 @@ body {
   display: none;
 }
 
-
+.backButton{ width: 85px; margin-left:0px;margin-top:9px;}
 
 
 </style>
+<div class = "backButton">
+  <button onclick="back()">Back</button>
+</div>
+ 
+
 <body>
 <svg id="body" width="950" height="500"></svg>
 
@@ -583,6 +588,12 @@ else{
   drawBarChart();
   update();
 }
+
+function back(){
+  location.href = "index.html";
+}
+
+
 
 </script>
 
